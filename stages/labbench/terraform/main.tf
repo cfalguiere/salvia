@@ -68,9 +68,35 @@ locals {
 resource "aws_s3_bucket_object" "base_folder" {
   for_each = local.names
   
-  bucket  = "${module.shared_s3_bucket.current_bucket.id}"
+  bucket  = module.shared_s3_bucket.current_bucket.id
   acl     = "private"
   key     =  each.value
   content_type = "application/x-directory"
+}
+
+
+# dump some configuration information onto S3
+
+resource "aws_s3_bucket_object" "file_upload" {
+  bucket      = module.shared_s3_bucket.current_bucket.id
+  acl         = "private"
+  key         = "env_configuration.json"
+  content  = jsonencode({
+    Domain = {
+      Platform = var.platform,
+      Environment = var.environment
+    }
+  })
+  content_type = "application/json"
+  #source      = local_file.env_configuration.filename
+
+  # The filemd5() function is available in Terraform 0.11.12 and later
+  # For Terraform 0.11.11 and earlier, use the md5() function and the file() function:
+  # etag = "${md5(file("path/to/file"))}"
+  #etag        = filemd5(local_file.env_configuration.filename)
+  
+  #provisioner "local-exec" {
+  #   command = "aws s3 cp ${local.object_source} ${module.shared_s3_bucket.current_bucket.uri}/"
+  #}
 }
 
