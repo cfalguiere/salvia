@@ -33,6 +33,10 @@ Thise configuration are not tested though.
 
 All the scripts leverage Terraform. It is preinstalled on Cloud9 environment. If you run a different setup you may want to install it.
 
+As SageMaker studio features are new, youmust upgrade the terraform version preinstalled in Cloud9.
+````
+$ terraform init -upgrade
+````
 
 ## Initialisation of LabBench
 
