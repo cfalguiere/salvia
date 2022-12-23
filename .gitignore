@@ -129,6 +129,10 @@ dmypy.json
 .pyre/
 
 
+# ignore secure and generated content
 *.secure.*
 *generated*
 
+# ignore terraform generated content
+.terraform*
+tfplan
