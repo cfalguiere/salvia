@@ -30,6 +30,22 @@ variable encrypt {
 
 #### Resources to be used :
 
+# generated variables
+
+variable platform {
+  type = string
+}
+
+variable platform_label {
+  type = string
+}
+
 variable environment {
   type = string
 }
+
+variable environment_label {
+  type = string
+}
+
+# your variables

@@ -19,6 +19,8 @@ variable "parent_context" {
   type = object({
       account_id            = string
       region                = string
+      platform              = string
+      environment           = string
   })
 }
 
