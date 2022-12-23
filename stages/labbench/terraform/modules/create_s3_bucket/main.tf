@@ -6,7 +6,6 @@ data "aws_caller_identity" "current" {}
 resource "aws_s3_bucket" "current" {
 
   bucket = "${var.bucket_name}-${var.parent_context.account_id}"
-  acl = "private"
 
   tags = {
     Name        = var.bucket_name
@@ -14,6 +13,11 @@ resource "aws_s3_bucket" "current" {
     Environment = var.common_tags.Environment
     Creator  = var.common_tags.Creator
   }
+}
+
+resource "aws_s3_bucket_acl" "current" {
+  bucket = aws_s3_bucket.current.id
+  acl    = "private"
 }
 
 # block all public access to bucket
