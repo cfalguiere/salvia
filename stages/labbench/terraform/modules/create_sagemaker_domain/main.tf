@@ -22,7 +22,7 @@ resource "aws_sagemaker_domain" "current" {
   #(Optional) The retention policy for data stored on an Amazon Elastic File System (EFS) volume. 
   #Valid values are Retain or Delete. Default value is Retain.
   retention_policy {
-    home_efs_file_system = "Delete" # "Retain"
+    home_efs_file_system = "Delete" # "Retain" "Delete"
   }
   
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sagemaker_domain

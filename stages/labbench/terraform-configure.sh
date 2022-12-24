@@ -4,8 +4,6 @@ envname=labbench
 
 region=$(aws ec2 describe-availability-zones --output text --query 'AvailabilityZones[0].[RegionName]')
 
-userid=$(aws sts get-caller-identity --output text --query 'UserId')
-
 account=$(aws sts get-caller-identity --output text --query 'Account')
 
 states_bucket="terraform-${region}-${account}"
@@ -34,11 +32,6 @@ cat > $backend_config_file_name <<TEMPLATE1
 # Do not change the key names
 # use with -backend-config in init
 #
-
-# choose a role associated to the ec2 instance
-# make sure the role has the policy AdministratorAccess
-#profile  = "$userid"
-shared_credentials_file = "$credentials_file_name"
 
 # make sure the bucket exists
 # make user or role has access to the bucket and files

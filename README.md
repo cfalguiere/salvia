@@ -25,11 +25,20 @@ This repository includes setups for several environments
 
 This is expected to be run from within the AWS account in Cloud9. 
 It should run in another type of environment like an EC2 instance, or a local setup with AWS CLI configured.
-Thise configuration are not tested though.
+These configuration are not tested though.
 
-- setup a Cloud9 environment in the region you want to operate the environment
-- setup the git configuration on this instance
-- clone the repository
+### Setup a Cloud9 instance
+
+setup a Cloud9 environment in the region you want to operate the environment
+
+### Setup Git on the Cloud Instance
+
+configure the git credentials 
+
+
+### Clone this repository onto the Cloud instance
+
+### Upgrade Terraform on the Cloud9 instance
 
 All the scripts leverage Terraform. It is preinstalled on Cloud9 environment. If you run a different setup you may want to install it.
 
@@ -37,6 +46,34 @@ As SageMaker studio features are new, youmust upgrade the terraform version prei
 ````
 $ terraform init -upgrade
 ````
+
+### Setup you credentials on the Cloud9 instance
+
+Cloud9 allocate some credentials in the default location ~/.aws/credentials. These are temporary token that works for most services. 
+However we want to be able to autorize additional services.
+
+The terraform plan will use environment variable to hget access to the access key and secret key.
+
+Open ~/.bashrec and add the lines below addapted for your configuration at the end of the file. 
+You may use you personal keys. Ensure that this account has the permissions listed below or gain them from a group or role.
+```
+export AWS_ACCESS_KEY_ID=AKIAIOSYOURCCESSKEY
+export AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfYOURSECRETKEY
+export AWS_DEFAULT_REGION=us-west-2
+```
+
+When this is update the current shell. Either open a new Terminal or use the command below
+````
+source ~/.bashrc
+````
+
+Ensure that the user who owns this credentials has the permissions below.
+
+Required permissions for a quick sandbox setup
+- AmazonS3FullAccess
+- AdministratorAccess
+- AmazonSageMakerFullAccess
+
 
 ## Initialisation of LabBench
 
@@ -64,6 +101,14 @@ $ terraform validate
 $ terraform  plan -out tfplan
 $ terraform apply -auto-approve tfplan
 ```
+
+
+creates a domain by name salvia-labbench-<region>
+
+creates a S3 bucket by name salvia-labbench-<region>-1<accountid>
+
+The S3 buccket has 3 folders: sdi, data and work
+
 
 ## destroy an environment
 
