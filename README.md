@@ -109,6 +109,10 @@ creates a S3 bucket by name salvia-labbench-<region>-1<accountid>
 
 The S3 buccket has 3 folders: sdi, data and work
 
+A file is created at the end of the environment setup. 
+It is located at the root of the environment space. The name is env_configuration.json. 
+It contains information about this environment like the name of the environment. 
+
 
 ## destroy an environment
 
