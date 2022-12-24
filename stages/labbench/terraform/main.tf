@@ -26,15 +26,6 @@ terraform {
 
 provider "aws" {
   region  = var.region
-  shared_credentials_files = [var.shared_credentials_file]
-
-  # FIXME added sagemaker full access
-  # FIXME -
-  #assume_role {
-  #  role_arn     = "arn:aws:iam::102959664345:role/demo/mlops-for-demo"  # FIXME var.admin_role_arn
-  #  session_name = formatdate("YYYYMMDD-hhmmss", timestamp() )
-  #  external_id  = "sednara"  # var.profile  
-  #}
 
   # require v3.38 or higher
   #default tags {
