@@ -62,3 +62,24 @@ data "aws_iam_policy_document" "current" {
     }
   }
 }
+
+
+data "aws_iam_policy" "s3full" {
+  name = "AmazonS3FullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "s3full" {
+  role       = aws_iam_role.current.name
+  policy_arn = data.aws_iam_policy.s3full.arn
+}
+
+
+
+data "aws_iam_policy" "smfull" {
+  name = "AmazonSageMakerFullAccess"
+}
+
+resource "aws_iam_role_policy_attachment" "smfull" {
+  role       = aws_iam_role.current.name
+  policy_arn = data.aws_iam_policy.smfull.arn
+}
