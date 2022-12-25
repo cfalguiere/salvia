@@ -1,11 +1,14 @@
 name: 'Build Iris"
 
 on:
-   push:
+   push
 
 jobs:
    build-iris:
       runs-on: "ubuntu-latest"
+
+      env:
+         CI: TRUE
 
       steps:
          - name: Checkout
@@ -17,5 +20,5 @@ jobs:
          - name: Porce"ed to Iris
            run: cd projects/iris
 
-         - name: run nox
+         - name: Run nox
            run: nox -f notebooks/noxfile.py	
