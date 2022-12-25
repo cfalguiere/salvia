@@ -1,22 +1,22 @@
 name: 'Build Iris"
 
 on:
-  push:
+   push:
 
 jobs:
-  build-iris:
-    runs-on: "ubuntu-latest"
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+   build-iris:
+      runs-on: "ubuntu-latest"
 
-      - name: Install nox
-        run: pip install nox 
+      steps:
+         - name: Checkout
+           uses: actions/checkout@v3
 
-      - name: Porce"ed to Iris
-        run: cd projects/iris
+         - name: Install nox
+           run: pip install nox 
 
-      - name: run nox
-	run: cat notebooks/noxfile.py 
-        #run: nox -f notebooks/noxfile.py	
+         - name: Porce"ed to Iris
+           run: cd projects/iris
+
+         - name: run nox
+           run: nox -f notebooks/noxfile.py	
 
