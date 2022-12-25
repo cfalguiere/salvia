@@ -17,8 +17,6 @@ jobs:
          - name: Install nox
            run: pip install nox 
 
-           run: cd projects/iris
-
          - name: Run nox
            run: |
               cd projects/iris
