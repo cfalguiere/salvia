@@ -17,8 +17,9 @@ jobs:
          - name: Install nox
            run: pip install nox 
 
-         - name: Porce"ed to Iris
            run: cd projects/iris
 
          - name: Run nox
-           run: nox -f notebooks/noxfile.py	
+           run: |
+              cd projects/iris
+              nox -f notebooks/noxfile.py	
