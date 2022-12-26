@@ -132,6 +132,7 @@ dmypy.json
 # ignore secure and generated content
 *.secure.*
 *generated*
+generated/
 
 # ignore terraform generated content
 .terraform*
