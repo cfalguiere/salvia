@@ -1,15 +1,21 @@
 # Salvia
 
-This projects consists in setups AWS environments and utilities for ML tests leveraging AWS
+This projects consists in setups AWS environments and utilities for ML tests leveraging AWS.
+
+It is a side project meant to collect ideas and reusable code.
 
 # Introduction
 
 # Blueprint
 
-Leverages
-- AWS
+This project leverages
+- AWS services
 - Git
 - Terraform
+- Nox: 
+    - [Usage](https://nox.thea.codes/en/stable/usage.html)
+    - [Cookbook](https://nox.thea.codes/en/stable/cookbook.html)
+    - [Configuration & API](https://nox.thea.codes/en/stable/config.html)
 
 
 # Environments setup

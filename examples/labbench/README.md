@@ -1,4 +1,4 @@
-# Salvia Examples
+# Salvia Example for LabBench stage
 
 This section consists in experiments and notebooks examples.
 
