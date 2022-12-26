@@ -25,4 +25,4 @@ jobs:
          - name: Run nox
            run: |
               cd examples/labbench/iris
-              nox -f notebooks/noxfile.py	
+              nox -f noxfile.py	
