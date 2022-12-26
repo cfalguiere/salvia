@@ -7,5 +7,5 @@ This section consists in experiments and notebooks examples based on the Iris da
 This is a classification problem.
 
 The dataset is used in two ways
-- a regular libear regression using Scikit-Laarn and some addition to report the experiment
+- a regular logistic regression using Scikit-Learn and some addition to report the experiment
 - an automl implemnted with SageMaker AutoPilot
