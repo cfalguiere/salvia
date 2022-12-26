@@ -3,13 +3,18 @@
 """Check code in scripts and notebooks."""
 import nox
 
-#nox.options.sessions = ['lint', 'tests']
-nox.options.sessions = ['lint_notebooks', 'check_notebooks']
+
+VENV_BACKEND = 'venv'
+
+VENV_PYTHON_VERSION = '3.9'
+
+nox.options.sessions = ['nblint']
 
 
-@nox.session(venv_backend='venv', python='3.9')
-def lint_notebooks(session):
+@nox.session(venv_backend=VENV_BACKEND, python=VENV_PYTHON_VERSION)
+def nblint(session):
     session.install('nblint')
+    session.install('sagemaker==2.120.0')
 
     import os
     for root, dirs, files in os.walk('./notebooks/'):
@@ -26,9 +31,10 @@ def lint_notebooks(session):
     # TODO ignore magic
 
 
-@nox.session(venv_backend='venv', python='3.9')
-def check_notebooks(session):
+@nox.session(venv_backend=VENV_BACKEND, python=VENV_PYTHON_VERSION)
+def nbcheck(session):
     session.install('nbconvert')
+    session.install('sagemaker==2.120.0')
     import os
     for root, dirs, files in os.walk('./notebooks/'):
         if 'output' not in root:
