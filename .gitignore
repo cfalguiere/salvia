@@ -131,6 +131,7 @@ dmypy.json
 
 # ignore secure and generated content
 *.secure.*
+*secure_config*
 *generated*
 generated/
 
