@@ -38,3 +38,10 @@ https://aws.amazon.com/blogs/machine-learning/move-amazon-sagemaker-autopilot-ml
 https://sagemaker-examples.readthedocs.io/en/latest/autopilot/autopilot_customer_churn_high_level_with_evaluation.html
 
 https://sagemaker-examples.readthedocs.io/en/latest/sagemaker-pipelines/tabular/automl-step/sagemaker_autopilot_pipelines_native_auto_ml_step.html
+
+
+API documentation
+- https://sagemaker-examples.readthedocs.io/en/latest/hyperparameter_tuning/xgboost_random_log/hpo_xgboost_random_log.html
+- https://fig.io/manual/aws/sagemaker/create-hyper-parameter-tuning-job
+- https://docs.aws.amazon.com/sagemaker/latest/dg/automatic-model-tuning-monitor.html
+- https://sagemaker.readthedocs.io/en/stable/api/training/automl.html
