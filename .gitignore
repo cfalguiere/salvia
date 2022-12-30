@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+
+# ignore secure and generated content
+*.secure.*
+*secure_config*
+*generated*
+generated/
+
+# ignore terraform generated content
+.terraform*
+tfplan
