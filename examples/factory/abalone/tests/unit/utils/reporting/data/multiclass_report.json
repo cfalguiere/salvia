@@ -1,0 +1,70 @@
+{
+    "definition": {"error_message": "dummy"},
+    "execution_definition": {"error_message": "dummy"},
+    "execution_steps": [{"error_message": "dummy"}],
+    "lineage": [{"error_message": "dummy"}],
+
+    "evaluation": {
+
+        "multiclass_classification_metrics" : {
+            "confusion_matrix" : {
+              "0" : {
+                "0" : 1180,
+                "1" : 510
+              },
+              "1" : {
+                "0" : 268,
+                "1" : 138
+              }
+            },
+            "accuracy" : {
+              "value" : 0.6288167938931297,
+              "standard_deviation" : 0.00375663881299405
+            },
+            "weighted_recall" : {
+              "value" : 0.6288167938931297,
+              "standard_deviation" : 0.003756638812994008
+            },
+            "weighted_precision" : {
+              "value" : 0.6983172269629505,
+              "standard_deviation" : 0.006195912915307507
+            },
+            "weighted_f0_5" : {
+              "value" : 0.6803947317178771,
+              "standard_deviation" : 0.005328406973561699
+            },
+            "weighted_f1" : {
+              "value" : 0.6571162346664904,
+              "standard_deviation" : 0.004385008075019733
+            },
+            "weighted_f2" : {
+              "value" : 0.6384024354394601,
+              "standard_deviation" : 0.003867109755267757
+            },
+            "accuracy_best_constant_classifier" : {
+              "value" : 0.19370229007633588,
+              "standard_deviation" : 0.0032049848450732355
+            },
+            "weighted_recall_best_constant_classifier" : {
+              "value" : 0.19370229007633588,
+              "standard_deviation" : 0.0032049848450732355
+            },
+            "weighted_precision_best_constant_classifier" : {
+              "value" : 0.03752057718081697,
+              "standard_deviation" : 0.001241536088657851
+            },
+            "weighted_f0_5_best_constant_classifier" : {
+              "value" : 0.04473443104152011,
+              "standard_deviation" : 0.0014460485504284792
+            },
+            "weighted_f1_best_constant_classifier" : {
+              "value" : 0.06286421244683643,
+              "standard_deviation" : 0.0019113576884608862
+            },
+            "weighted_f2_best_constant_classifier" : {
+              "value" : 0.10570313141262414,
+              "standard_deviation" : 0.002734216826748117
+            }
+          }
+    }  
+}
