@@ -2,6 +2,8 @@
 
 # Execution
 
+## Summary
+
 {% if "error_message" not in execution_definition  -%}
 PipelineExecutionArn: {{ execution_definition['PipelineExecutionArn'] }}
 PipelineExecutionDisplayName: {{ execution_definition['PipelineExecutionDisplayName'] }}
@@ -11,13 +13,13 @@ ExperimentName: {{ execution_definition['PipelineExperimentConfig']['ExperimentN
 TrialName: {{ execution_definition['PipelineExperimentConfig']['TrialName'] }}
 UserProfileName: {{ execution_definition['LastModifiedBy']['UserProfileName'] }}
 {%- else  %}
-Data not available: 
-{{ execution_definition['error_message'] }} 
+Data not available:
+{{ execution_definition['error_message'] }}
 {{ execution_definition['error_reason'] }}
 {{ execution_definition['stack_trace'] }}
 {%- endif  %}
 
-# Steps
+## Steps
 
 {% if "error_message" not in execution_steps[0]  -%}
 | Name      | StartTime | EndTime | StepStatus |
@@ -26,17 +28,19 @@ Data not available:
 | {{step['StepName']}} | {{step['StartTimeShort']}} | {{step['EndTimeShort']}} | {{step['StepStatus']}} |
 {% endfor -%}
 {%- else  %}
-Data not available: 
-{{ execution_steps[0]['error_message'] }} 
+Data not available:
+{{ execution_steps[0]['error_message'] }}
 {{ execution_steps[0]['error_reason'] }}
 {{ execution_steps[0]['stack_trace'] }}
 {%- endif  %}
 
-# Lineage
+## Lineage
 
 {% if "error_message" not in lineage[0]  -%}
 {% for step in lineage -%}
-## {{step['stepname']}}
+
+### {{step['stepname']}}
+
 | Name/Source   | Direction | Type | Association Type | Lineage Type |
 | ------------- | --------- | ---- | ---------------- | ------------ |
 {% for item in step['items']  -%}
@@ -44,13 +48,13 @@ Data not available:
 {% endfor  %}
 {% endfor -%}
 {%- else  %}
-Data not available: 
-{{ lineage[0]['error_message'] }} 
+Data not available:
+{{ lineage[0]['error_message'] }}
 {{ lineage[0]['error_reason'] }}
 {{ lineage[0]['stack_trace'] }}
 {%- endif  %}
 
-# Evaluation
+## Evaluation
 
 {% if "error_message" not in evaluation  -%}
 {% for evaluation_key, evaluation_value in evaluation.items() -%}
@@ -72,8 +76,8 @@ Confusion matrix
 {% endfor  %}
 {%- endfor  %}
 {%- else  %}
-Data not available: 
-{{ evaluation['error_message'] }} 
+Data not available:
+{{ evaluation['error_message'] }}
 {{ evaluation['error_reason'] }}
 {{ evaluation['stack_trace'] }}
 {%- endif  %}
