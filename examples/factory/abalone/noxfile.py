@@ -3,7 +3,6 @@
 """Check code in scripts and notebooks."""
 import nox
 
-
 VENV_BACKEND = 'venv'
 
 VENV_PYTHON_VERSION = '3.9'

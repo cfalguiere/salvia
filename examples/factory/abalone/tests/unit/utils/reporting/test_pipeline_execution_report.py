@@ -1,17 +1,13 @@
-import os
 import json
+import os
 from datetime import datetime
 
 import pytest
 
 # Module under test
 from abalone.utils.reporting.pipeline_execution_report import (
-    _enhance_json,
-    create_combined_json_report,
-    create_markdown_report,
-    write_json_report,
-    write_markdown_report,
-)
+    _enhance_json, create_combined_json_report, create_markdown_report,
+    write_json_report, write_markdown_report)
 
 
 @pytest.fixture
