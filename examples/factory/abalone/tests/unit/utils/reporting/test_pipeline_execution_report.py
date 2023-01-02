@@ -15,9 +15,8 @@ def json_path():
     return "tests/unit/utils/reporting/data"
 
 @pytest.fixture
-def report_settings():
-    settings = PipelineExecutionReportSettings()
-
+def report_generator():
+    return PipelineExecutionReport()
 
 @pytest.fixture
 def raw_combined_json_report(json_path):
@@ -72,39 +71,21 @@ def json_report_with_fillers():
 
 
 @pytest.fixture
-def regression_json_report(json_path):
+def regression_json_report(json_path, report_generator):
     filepath = os.path.join(json_path, "regression_report.json")
-    try:
-        with open(filepath) as json_data:
-            combined_json = json.load(json_data)
-
-        return combined_json
-    except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+    return report_generator.load_json_report(filepath)
 
 
 @pytest.fixture
-def binary_classification_json_report(json_path):
+def binary_classification_json_report(json_path, report_generator):
     filepath = os.path.join(json_path, "binary_classification_report.json")
-    try:
-        with open(filepath) as json_data:
-            combined_json = json.load(json_data)
-
-        return combined_json
-    except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+    return report_generator.load_json_report(filepath)
 
 
 @pytest.fixture
-def multiclass_json_report(json_path):
+def multiclass_json_report(json_path, report_generator):
     filepath = os.path.join(json_path, "multiclass_report.json")
-    try:
-        with open(filepath) as json_data:
-            combined_json = json.load(json_data)
-
-        return combined_json
-    except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+    return report_generator.load_json_report(filepath)
 
 
 @pytest.fixture
@@ -127,8 +108,64 @@ def wrong_date_json_report(json_path):
         raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
 
 
+@pytest.fixture
+def steps_table_one_step_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "tables", "steps_table_one_step.json")
+    try:
+        with open(filepath) as json_data:
+            combined_json = json.load(json_data)
+
+        # stored data forced data to string. Revert back to data as objects
+        for step in combined_json["execution_steps"]:
+            start_as_datetime = datetime.fromisoformat(step["StartTime"])
+            step["StartTime"] = start_as_datetime
+            end_as_datetime = datetime.fromisoformat(step["EndTime"])
+            step["EndTime"] = end_as_datetime
+
+        return report_generator._enhance_json(combined_json)
+    except FileNotFoundError as exc:
+        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+
+
+@pytest.fixture
+def steps_table_two_steps_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "tables", "steps_table_two_steps.json")
+    try:
+        with open(filepath) as json_data:
+            combined_json = json.load(json_data)
+
+        # stored data forced data to string. Revert back to data as objects
+        for step in combined_json["execution_steps"]:
+            start_as_datetime = datetime.fromisoformat(step["StartTime"])
+            step["StartTime"] = start_as_datetime
+            end_as_datetime = datetime.fromisoformat(step["EndTime"])
+            step["EndTime"] = end_as_datetime
+
+        return report_generator._enhance_json(combined_json)
+    except FileNotFoundError as exc:
+        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+
+
+@pytest.fixture
+def lineage_table_one_line_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "tables", "lineage_table_one_line.json")
+    return report_generator.load_json_report(filepath)
+
+
+@pytest.fixture
+def lineage_table_two_lines_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "tables", "lineage_table_two_lines.json")
+    return report_generator.load_json_report(filepath)
+
+
+@pytest.fixture
+def regression_one_metric_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "tables", "regression_one_metric_report.json")
+    return report_generator.load_json_report(filepath)
+
+
 # @pytest.mark.xfail
-def test_create_combined_json_report(json_report_with_fillers, report_settings):
+def test_create_combined_json_report(json_report_with_fillers):
     # test robustness
     # should log and provide filler for execution status that it could not fetch
     json_dict = PipelineExecutionReport().create_combined_json_report(None, None, None, None)
@@ -157,7 +194,7 @@ def test_create_combined_json_report(json_report_with_fillers, report_settings):
 
 
 # @pytest.mark.xfail
-def test_create_markdown_report(sample_combined_json_report, report_settings):
+def test_create_markdown_report(sample_combined_json_report):
     md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     status_content = "PipelineExecutionStatus: Succeeded"
@@ -165,7 +202,7 @@ def test_create_markdown_report(sample_combined_json_report, report_settings):
 
 
 # @pytest.mark.xfail
-def test_create_markdown_report_with_fillers(json_report_with_fillers, report_settings):
+def test_create_markdown_report_with_fillers(json_report_with_fillers):
     md_report = PipelineExecutionReport().create_markdown_report(json_report_with_fillers)
 
     # not included so far
@@ -177,7 +214,7 @@ def test_create_markdown_report_with_fillers(json_report_with_fillers, report_se
 
 
 # @pytest.mark.xfail
-def test_enhance_date(raw_combined_json_report, report_settings):
+def test_enhance_date(raw_combined_json_report):
     enhanced_report = PipelineExecutionReport()._enhance_json(raw_combined_json_report)
 
     step0 = enhanced_report["execution_steps"][0]
@@ -192,7 +229,7 @@ def test_enhance_date(raw_combined_json_report, report_settings):
 
 
 # @pytest.mark.xfail
-def test_enhance_date_wrong_content(wrong_date_json_report, report_settings):
+def test_enhance_date_wrong_content(wrong_date_json_report):
     enhanced_report = PipelineExecutionReport()._enhance_json(wrong_date_json_report)
 
     step0 = enhanced_report["execution_steps"][0]
@@ -216,7 +253,7 @@ def test_enhance_date_wrong_content(wrong_date_json_report, report_settings):
 
 
 # @pytest.mark.xfail
-def test_date_formatting(sample_combined_json_report, report_settings):
+def test_date_formatting(sample_combined_json_report):
     # shorten date format
     md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
@@ -226,47 +263,76 @@ def test_date_formatting(sample_combined_json_report, report_settings):
     assert step_content in md_report
 
 
-@pytest.mark.xfail
-def test_table_formatting(sample_combined_json_report, report_settings):
-    # check whether there are empty lines in tables which breaks the table display
 
-    nb_lines_template = -1  # header {#
-    with open("templates/pipeline_execution_report.md", "r") as file:
-        for line in file:
-            if not line.startswith("{%-"):  # strip jinja code when - suppress blank line
-                if not "-%}" in line:  # strip jinja code when - suppress blank line
-                    nb_lines_template += 1
-    print(f"{nb_lines_template=}")
 
-    nb_steps = len(sample_combined_json_report["execution_steps"])
-    nb_lines_steps = nb_steps
-    print(f"{nb_lines_steps=}")
-
-    nb_steps_lineage = len(sample_combined_json_report["lineage"])
-    nb_lines_lineage = nb_steps_lineage * 3
-    print(f"{nb_lines_lineage=}")
-    for step in sample_combined_json_report["lineage"]:
-        nb_lines_lineage += len(step["items"])
-    print(f"{nb_lines_lineage=}")
-
-    nb_lines_metrics = -4  # no confusion matrix
-    for evaluation_result in sample_combined_json_report["evaluation"].values():
-        nb_lines_metrics += len(evaluation_result.values())
-    print(f"{nb_lines_metrics=}")
-
-    fallback_nb_lines = 4 * 4
-
-    expected_nb_lines = nb_lines_template + nb_lines_steps + nb_lines_lineage + nb_lines_metrics - fallback_nb_lines
-
-    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
+# @pytest.mark.xfail
+def test_table_summary_formatting(sample_combined_json_report):
+    report_generator = PipelineExecutionReport()
+    md_report = report_generator.create_markdown_report(sample_combined_json_report)
 
     print(md_report)
 
-    assert md_report.count("\n") == expected_nb_lines
+    execution_definition = sample_combined_json_report['execution_definition']
+    assert execution_definition['PipelineExecutionArn'] in md_report
+    assert execution_definition['PipelineExecutionDisplayName'] in md_report
+    assert execution_definition['PipelineExecutionStatus']  in md_report
+    assert execution_definition['PipelineExecutionDescription'] in md_report
+    assert execution_definition['PipelineExperimentConfig']['ExperimentName'] in md_report
+    assert execution_definition['PipelineExperimentConfig']['TrialName'] in md_report
+    assert execution_definition['LastModifiedBy']['UserProfileName'] in md_report
+
+
+# @pytest.mark.xfail
+def test_table_steps_formatting(steps_table_one_step_json_report, 
+                                steps_table_two_steps_json_report):
+    # ensure table lines are have correct line split and no extra lines
+    report_generator = PipelineExecutionReport()
+    md_report_1 = report_generator.create_markdown_report(steps_table_one_step_json_report)
+    md_report_2 = report_generator.create_markdown_report(steps_table_two_steps_json_report)
+
+    print(md_report_1)
+    print(md_report_2)
+
+    assert md_report_2.count("\n") == md_report_1.count("\n") + 1
+    
+    assert '| AbaloneTrain | 02/12/2022 21:08:23 | 02/12/2022 21:09:45 | Succeeded |' in md_report_1
+
+
+# @pytest.mark.xfail
+def test_table_lineage_formatting(lineage_table_one_line_json_report, 
+                                  lineage_table_two_lines_json_report):
+    # ensure table lines are have correct line split and no extra lines
+    report_generator = PipelineExecutionReport()
+    md_report_1 = report_generator.create_markdown_report(lineage_table_one_line_json_report)
+    md_report_2 = report_generator.create_markdown_report(lineage_table_two_lines_json_report)
+
+    print(md_report_1)
+    print(md_report_2)
+
+    assert md_report_2.count("\n") == md_report_1.count("\n") + 1
+    
+    l = '| s3://...022-12-02-21-04-06-122/output/validation | Input | DataSet | ContributedTo | artifact |'
+    assert l in md_report_1
+
+
+# @pytest.mark.xfail
+def test_table_metrics_formatting(regression_one_metric_json_report,
+                                  regression_json_report):
+    # ensure table lines are have correct line split and no extra lines
+    report_generator = PipelineExecutionReport()
+    md_report_1 = report_generator.create_markdown_report(regression_one_metric_json_report)
+    md_report_2 = report_generator.create_markdown_report(regression_json_report)
+
+    print(md_report_1)
+    print(md_report_2)
+
+    assert md_report_2.count("\n") == md_report_1.count("\n") + 3
+    
+    assert '| mae | 0.3711832061068702 | 0.0037566388129940394 |' in md_report_1
 
 
 @pytest.mark.xfail
-def test_long_uri_formatting(sample_combined_json_report, report_settings):
+def test_long_uri_formatting(sample_combined_json_report):
     # avoid truncated s3 uris
     md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
@@ -276,7 +342,7 @@ def test_long_uri_formatting(sample_combined_json_report, report_settings):
 
 
 # @pytest.mark.xfail
-def test_regression_formatting(regression_json_report, report_settings):
+def test_regression_formatting(regression_json_report):
     # sample source: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
     md_report = PipelineExecutionReport().create_markdown_report(regression_json_report)
 
@@ -289,7 +355,7 @@ def test_regression_formatting(regression_json_report, report_settings):
 
 
 # @pytest.mark.xfail
-def test_binary_classification_formatting(binary_classification_json_report, report_settings):
+def test_binary_classification_formatting(binary_classification_json_report):
     # sample source: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
     md_report = PipelineExecutionReport().create_markdown_report(binary_classification_json_report)
 
@@ -307,7 +373,7 @@ def test_binary_classification_formatting(binary_classification_json_report, rep
 
 
 # @pytest.mark.xfail
-def test_multiclass_formatting(multiclass_json_report, report_settings):
+def test_multiclass_formatting(multiclass_json_report):
     # sample source: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
     md_report = PipelineExecutionReport().create_markdown_report(multiclass_json_report)
 
@@ -323,7 +389,7 @@ def test_multiclass_formatting(multiclass_json_report, report_settings):
 
 
 # @pytest.mark.xfail
-def test_template_not_found(sample_combined_json_report, report_settings):
+def test_template_not_found(sample_combined_json_report):
     # when template is not found, returns a report with the exception text
 
     report_settings = PipelineExecutionReportSettings()

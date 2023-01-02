@@ -1,0 +1,15 @@
+{
+    "definition": {"error_message": "dummy"},
+    "execution_definition": {"error_message": "dummy"},
+    "execution_steps": [{"error_message": "dummy"}],
+    "lineage": [{"error_message": "dummy"}],
+
+    "evaluation": {
+        "regression_metrics" : {
+            "mae" : {
+              "value" : 0.3711832061068702,
+              "standard_deviation" : 0.0037566388129940394
+            }
+        }
+    }
+}

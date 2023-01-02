@@ -1,5 +1,7 @@
 """This module contains helper functions to create reports.
 """
+import json
+import logging
 
 class BaseReport:
     """This class is an abstract class used as a base class for other reports.
@@ -32,7 +34,7 @@ class BaseReport:
             json.dump(json_report, f, default=str)
 
 
-    def load_json_report(filepath: str) -> dict:
+    def load_json_report(self, filepath: str) -> dict:
         """Loads the JSON report into a dict.
 
         Parameters
