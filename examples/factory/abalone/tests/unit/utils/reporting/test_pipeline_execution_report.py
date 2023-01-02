@@ -6,13 +6,17 @@ import pytest
 
 # Module under test
 from abalone.utils.reporting.pipeline_execution_report import (
-    _enhance_json, create_combined_json_report, create_markdown_report,
-    write_json_report, write_markdown_report)
-
+    PipelineExecutionReport, 
+    PipelineExecutionReportSettings
+)
 
 @pytest.fixture
 def json_path():
     return "tests/unit/utils/reporting/data"
+
+@pytest.fixture
+def report_settings():
+    settings = PipelineExecutionReportSettings()
 
 
 @pytest.fixture
@@ -124,10 +128,10 @@ def wrong_date_json_report(json_path):
 
 
 # @pytest.mark.xfail
-def test_create_combined_json_report(json_report_with_fillers):
+def test_create_combined_json_report(json_report_with_fillers, report_settings):
     # test robustness
     # should log and provide filler for execution status that it could not fetch
-    json_dict = create_combined_json_report(None, None, None, None)
+    json_dict = PipelineExecutionReport().create_combined_json_report(None, None, None, None)
 
     print(json_dict)
 
@@ -153,16 +157,16 @@ def test_create_combined_json_report(json_report_with_fillers):
 
 
 # @pytest.mark.xfail
-def test_create_markdown_report(sample_combined_json_report):
-    md_report = create_markdown_report(sample_combined_json_report)
+def test_create_markdown_report(sample_combined_json_report, report_settings):
+    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     status_content = "PipelineExecutionStatus: Succeeded"
     assert status_content in md_report
 
 
 # @pytest.mark.xfail
-def test_create_markdown_report_with_fillers(json_report_with_fillers):
-    md_report = create_markdown_report(json_report_with_fillers)
+def test_create_markdown_report_with_fillers(json_report_with_fillers, report_settings):
+    md_report = PipelineExecutionReport().create_markdown_report(json_report_with_fillers)
 
     # not included so far
     # assert "Could not read pipeline definitions" in md_report
@@ -173,8 +177,8 @@ def test_create_markdown_report_with_fillers(json_report_with_fillers):
 
 
 # @pytest.mark.xfail
-def test_enhance_date(raw_combined_json_report):
-    enhanced_report = _enhance_json(raw_combined_json_report)
+def test_enhance_date(raw_combined_json_report, report_settings):
+    enhanced_report = PipelineExecutionReport()._enhance_json(raw_combined_json_report)
 
     step0 = enhanced_report["execution_steps"][0]
 
@@ -188,8 +192,8 @@ def test_enhance_date(raw_combined_json_report):
 
 
 # @pytest.mark.xfail
-def test_enhance_date_wrong_content(wrong_date_json_report):
-    enhanced_report = _enhance_json(wrong_date_json_report)
+def test_enhance_date_wrong_content(wrong_date_json_report, report_settings):
+    enhanced_report = PipelineExecutionReport()._enhance_json(wrong_date_json_report)
 
     step0 = enhanced_report["execution_steps"][0]
 
@@ -212,9 +216,9 @@ def test_enhance_date_wrong_content(wrong_date_json_report):
 
 
 # @pytest.mark.xfail
-def test_date_formatting(sample_combined_json_report):
+def test_date_formatting(sample_combined_json_report, report_settings):
     # shorten date format
-    md_report = create_markdown_report(sample_combined_json_report)
+    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     print(md_report)
 
@@ -222,8 +226,8 @@ def test_date_formatting(sample_combined_json_report):
     assert step_content in md_report
 
 
-# @pytest.mark.xfail
-def test_table_formatting(sample_combined_json_report):
+@pytest.mark.xfail
+def test_table_formatting(sample_combined_json_report, report_settings):
     # check whether there are empty lines in tables which breaks the table display
 
     nb_lines_template = -1  # header {#
@@ -254,7 +258,7 @@ def test_table_formatting(sample_combined_json_report):
 
     expected_nb_lines = nb_lines_template + nb_lines_steps + nb_lines_lineage + nb_lines_metrics - fallback_nb_lines
 
-    md_report = create_markdown_report(sample_combined_json_report)
+    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     print(md_report)
 
@@ -262,9 +266,9 @@ def test_table_formatting(sample_combined_json_report):
 
 
 @pytest.mark.xfail
-def test_long_uri_formatting(sample_combined_json_report):
+def test_long_uri_formatting(sample_combined_json_report, report_settings):
     # avoid truncated s3 uris
-    md_report = create_markdown_report(sample_combined_json_report)
+    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     print(md_report)
 
@@ -272,9 +276,9 @@ def test_long_uri_formatting(sample_combined_json_report):
 
 
 # @pytest.mark.xfail
-def test_regression_formatting(regression_json_report):
+def test_regression_formatting(regression_json_report, report_settings):
     # sample source: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
-    md_report = create_markdown_report(regression_json_report)
+    md_report = PipelineExecutionReport().create_markdown_report(regression_json_report)
 
     print(md_report)
 
@@ -285,9 +289,9 @@ def test_regression_formatting(regression_json_report):
 
 
 # @pytest.mark.xfail
-def test_binary_classification_formatting(binary_classification_json_report):
+def test_binary_classification_formatting(binary_classification_json_report, report_settings):
     # sample source: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
-    md_report = create_markdown_report(binary_classification_json_report)
+    md_report = PipelineExecutionReport().create_markdown_report(binary_classification_json_report)
 
     print(md_report)
 
@@ -303,9 +307,9 @@ def test_binary_classification_formatting(binary_classification_json_report):
 
 
 # @pytest.mark.xfail
-def test_multiclass_formatting(multiclass_json_report):
+def test_multiclass_formatting(multiclass_json_report, report_settings):
     # sample source: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
-    md_report = create_markdown_report(multiclass_json_report)
+    md_report = PipelineExecutionReport().create_markdown_report(multiclass_json_report)
 
     print(md_report)
 
@@ -319,11 +323,12 @@ def test_multiclass_formatting(multiclass_json_report):
 
 
 # @pytest.mark.xfail
-def test_template_not_found(sample_combined_json_report):
+def test_template_not_found(sample_combined_json_report, report_settings):
     # when template is not found, returns a report with the exception text
 
-    md_report = create_markdown_report(multiclass_json_report,
-                                      markdown_template='does_not_exist.md')
+    report_settings = PipelineExecutionReportSettings()
+    report_settings.markdown_template_filename = 'does_not_exist.md'
+    md_report = PipelineExecutionReport(settings=report_settings).create_markdown_report(multiclass_json_report)
     print(md_report)
 
     assert "Could not generate report - Reason: err=TemplateNotFound('does_not_exist.md')" in md_report

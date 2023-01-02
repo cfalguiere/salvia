@@ -6,31 +6,73 @@ import traceback
 from datetime import datetime
 from typing import Any, Dict, List
 
+from dataclasses import dataclass
+
 import pandas as pd
 from jinja2 import Environment, FileSystemLoader
 from sagemaker.lineage.visualizer import LineageTableVisualizer
 
+from abalone.utils.reporting.commons import BaseReport
+
 # FIXME add pipemine parameters to the report
 # FIXME truncated urls in lineage
+
+# TODO set path for json et md
+# TODO set path for buildpath
+# TODO ajout d'un builder
 
 
 pd.set_option("display.max_colwidth", None)
 
 
-class PipelineExecutionReport:
+@dataclass
+class PipelineExecutionReportContext:
+    """Class for keeping track of report inputs."""
+    sagemaker_client: Any
+    pipeline: Any
+    execution: Any
+    eval_file_uri: str
+    # TODO optional eval
+    
+
+@dataclass
+class PipelineExecutionReportSettings:
+    """Class for keeping track of report inputs."""
+    # Directory where the templates could be found.
+    templates_folder: str = 'templates/'
+    # Name of file to be used as a template.
+    markdown_template_filename: str = 'pipeline_execution_report.md'
+    # TODO target folder and files
+    
+
+class PipelineExecutionReport(BaseReport):
     """This class collect information about the pipeline execution, 
     creates a JSON file and format most information information in a markdown report.
     """
 
-    # class variables shared by all instances
-    #TODO default_template_folder = 
+    # class variables shared by all instance
 
-    def __init__(self):
+    def __init__(self, settings: PipelineExecutionReportSettings = PipelineExecutionReportSettings()) -> Any:
         # instance variable unique to each instance
-        #self.name = name
+        self.settings = settings
 
         # initializations
         pass
+
+
+    def generate_report(self, context: PipelineExecutionReportContext):
+        json_report = self.create_combined_json_report(
+            self.context.sagemaker, 
+            self.context.pipeline, 
+            self.context.execution, 
+            self.context.eval_file_uri
+        )
+        json_file_name = os.path.join(buildpath, "report.json")
+        self.write_json_report(json_file_name, json_report)
+        md_report = self.create_markdown_report(json_report)
+        mdfile_name = os.path.join(buildpath, "report.md")
+        self.write_markdown_report(mdfile_name, md_report)
+
 
     def create_combined_json_report(self, sagemaker, pipeline, execution, eval_file_uri) -> dict:
         """Collect pipeline's run information and creates a JSON document.
@@ -76,49 +118,8 @@ class PipelineExecutionReport:
         return self._enhance_json(combined_report)
 
 
-    def write_json_report(self, filepath: str, json_report: dict) -> None:
-        """Writes down the dict onto the local file system.
-
-        Parameters
-        ----------
-        filepath: str
-            The name of the file to be created.
-        json_report: dict
-            The associative array created by create_combined_json_report.
-        """
-        logging.info(f"writing json report file to {filepath}")
-        with open(filepath, "w") as f:
-            json.dump(json_report, f, default=str)
-
-
-    def load_json_report(filepath: str) -> dict:
-        """Loads the JSON report into a dict.
-
-        Parameters
-        ----------
-        filepath: str
-            The name of the file to be loaded.
-        json_report: dict
-            The associative array created by create_combined_json_report.
-
-        Returns
-        -------
-        dict
-            the json document.
-        """
-        logging.info("loading json data from {filepath}")
-        try:
-            with open(filepath) as json_data:
-                data = json.load(json_data)
-            return data
-        except FileNotFoundError as exc:
-            raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
-
-
     def create_markdown_report(self,
-                               json_report: dict, 
-                               markdown_template_folder:str ='templates/',
-                               markdown_template : str ='pipeline_execution_report.md'
+                               json_report: dict
                               ) -> str:
         """Turn the pipeline report's dict into a Markdown document.
 
@@ -128,10 +129,6 @@ class PipelineExecutionReport:
         ----------
         json_report: dict
             The associative array created by create_combined_json_report.
-        markdown_template_folder: str
-            Directory where the templates could be found.
-        markdown_template: str
-            Name of file to be used as a template.
 
         Returns
         -------
@@ -140,8 +137,8 @@ class PipelineExecutionReport:
         """
         logging.info("generating markdown content")
         try:
-            environment = Environment(loader=FileSystemLoader(markdown_template_folder))  # noqa: S701
-            template = environment.get_template(markdown_template)
+            environment = Environment(loader=FileSystemLoader(self.settings.templates_folder))
+            template = environment.get_template(self.settings.markdown_template_filename)
 
             content = template.render(
                 execution_definition=json_report["execution_definition"],
@@ -153,21 +150,6 @@ class PipelineExecutionReport:
             return content
         except Exception as err:
             return f"Could not generate report - Reason: {err=}"
-
-
-    def write_markdown_report(self, filepath: str, content: str) -> None:
-        """Writes down the Markdown content onto the local file system.
-
-        Parameters
-        ----------
-        filepath: str
-            The name of the file to be created.
-        content: str
-            The markdown content to be written
-        """
-        logging.info(f"writing markdown report file to {filepath}")
-        with open(filepath, mode="w", encoding="utf-8") as report:
-            report.write(content)
 
 
     def _fallback_report_data(self, exc, message: str) -> Dict[str, Any]:
