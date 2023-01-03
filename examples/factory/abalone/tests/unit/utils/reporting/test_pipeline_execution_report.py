@@ -9,6 +9,8 @@ import pytest
 from abalone.utils.reporting.pipeline_execution_report import (
     PipelineExecutionReport, PipelineExecutionReportSettings)
 
+####
+# fixtures
 
 @pytest.fixture
 def json_path():
@@ -80,19 +82,19 @@ def json_report_with_fillers():
 
 @pytest.fixture
 def regression_json_report(json_path, report_generator):
-    filepath = os.path.join(json_path, "regression_report.json")
+    filepath = os.path.join(json_path, "evaluation_formats/regression_report.json")
     return report_generator.load_json_report(filepath)
 
 
 @pytest.fixture
 def binary_classification_json_report(json_path, report_generator):
-    filepath = os.path.join(json_path, "binary_classification_report.json")
+    filepath = os.path.join(json_path, "evaluation_formats/binary_classification_report.json")
     return report_generator.load_json_report(filepath)
 
 
 @pytest.fixture
 def multiclass_json_report(json_path, report_generator):
-    filepath = os.path.join(json_path, "multiclass_report.json")
+    filepath = os.path.join(json_path, "evaluation_formats/multiclass_report.json")
     return report_generator.load_json_report(filepath)
 
 
@@ -172,6 +174,9 @@ def regression_one_metric_json_report(json_path, report_generator):
     return report_generator.load_json_report(filepath)
 
 
+####
+# API
+
 # @pytest.mark.xfail
 def test_create_combined_json_report(json_report_with_fillers):
     # test robustness
@@ -222,6 +227,49 @@ def test_create_markdown_report(sample_combined_json_report):
 
 
 # @pytest.mark.xfail
+def test_generate_report_from_combined_json(
+    sample_combined_json_report, report_generator
+):
+
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        report_settings = PipelineExecutionReportSettings()
+        report_settings.report_folder = tmpdirname
+        md_report = PipelineExecutionReport(
+            settings=report_settings
+        ).generate_report_from_combined_json(sample_combined_json_report)
+
+        json_filename = os.path.join(tmpdirname, "pipeline_execution_report.json")
+        assert os.path.exists(json_filename)
+
+        data = report_generator.load_json_report(json_filename)
+        assert data["execution_definition"]["PipelineExecutionStatus"] == "Succeeded"
+
+        md_filename = os.path.join(tmpdirname, "pipeline_execution_report.md")
+        assert os.path.exists(md_filename)
+
+        with open(md_filename, "r") as test_file:
+            lines = test_file.readlines()
+        assert "PipelineExecutionStatus: Succeeded" in lines[8]
+
+####
+# resilience
+
+# @pytest.mark.xfail
+def test_date_formatting(sample_combined_json_report):
+    # shorten date format
+    md_report = PipelineExecutionReport().create_markdown_report(
+        sample_combined_json_report
+    )
+
+    print(md_report)
+
+    step_content = (
+        "| AbaloneProcess | 02/12/2022 21:04:09 | 02/12/2022 21:08:10 | Succeeded |"
+    )
+    assert step_content in md_report
+
+
+# @pytest.mark.xfail
 def test_create_markdown_report_with_fillers(json_report_with_fillers):
     md_report = PipelineExecutionReport().create_markdown_report(
         json_report_with_fillers
@@ -233,21 +281,6 @@ def test_create_markdown_report_with_fillers(json_report_with_fillers):
     assert "Could not read execution steps" in md_report
     assert "Could not read lineage" in md_report
     assert "Could not read evaluation report" in md_report
-
-
-# @pytest.mark.xfail
-def test_enhance_date(raw_combined_json_report):
-    enhanced_report = PipelineExecutionReport()._enhance_json(raw_combined_json_report)
-
-    step0 = enhanced_report["execution_steps"][0]
-
-    assert "StartTimeAsDatetime" in step0
-    assert isinstance(step0["StartTimeAsDatetime"], datetime)
-    assert step0["StartTimeShort"] == "02/12/2022 21:04:09"
-
-    assert "EndTimeAsDatetime" in step0
-    assert isinstance(step0["EndTimeAsDatetime"], datetime)
-    assert step0["EndTimeShort"] == "02/12/2022 21:08:10"
 
 
 # @pytest.mark.xfail
@@ -275,19 +308,24 @@ def test_enhance_date_wrong_content(wrong_date_json_report):
 
 
 # @pytest.mark.xfail
-def test_date_formatting(sample_combined_json_report):
-    # shorten date format
-    md_report = PipelineExecutionReport().create_markdown_report(
-        sample_combined_json_report
-    )
+def test_template_not_found(sample_combined_json_report):
+    # when template is not found, returns a report with the exception text
 
+    report_settings = PipelineExecutionReportSettings()
+    report_settings.markdown_template_filename = "does_not_exist.md"
+    md_report = PipelineExecutionReport(
+        settings=report_settings
+    ).create_markdown_report(multiclass_json_report)
     print(md_report)
 
-    step_content = (
-        "| AbaloneProcess | 02/12/2022 21:04:09 | 02/12/2022 21:08:10 | Succeeded |"
+    assert (
+        "Could not generate report - Reason: err=TemplateNotFound('does_not_exist.md')"
+        in md_report
     )
-    assert step_content in md_report
 
+
+####
+# presentation - table
 
 # @pytest.mark.xfail
 def test_table_summary_formatting(sample_combined_json_report):
@@ -384,6 +422,25 @@ def test_long_uri_formatting(sample_combined_json_report):
 
     assert "s3://..." not in md_report
 
+####
+# presentation - dates
+
+# @pytest.mark.xfail
+def test_enhance_date(raw_combined_json_report):
+    enhanced_report = PipelineExecutionReport()._enhance_json(raw_combined_json_report)
+
+    step0 = enhanced_report["execution_steps"][0]
+
+    assert "StartTimeAsDatetime" in step0
+    assert isinstance(step0["StartTimeAsDatetime"], datetime)
+    assert step0["StartTimeShort"] == "02/12/2022 21:04:09"
+
+    assert "EndTimeAsDatetime" in step0
+    assert isinstance(step0["EndTimeAsDatetime"], datetime)
+    assert step0["EndTimeShort"] == "02/12/2022 21:08:10"
+
+####
+# presentation - evaluation formats
 
 # @pytest.mark.xfail
 def test_regression_formatting(regression_json_report):
@@ -434,44 +491,3 @@ def test_multiclass_formatting(multiclass_json_report):
     assert "| accuracy" in md_report
 
 
-# @pytest.mark.xfail
-def test_template_not_found(sample_combined_json_report):
-    # when template is not found, returns a report with the exception text
-
-    report_settings = PipelineExecutionReportSettings()
-    report_settings.markdown_template_filename = "does_not_exist.md"
-    md_report = PipelineExecutionReport(
-        settings=report_settings
-    ).create_markdown_report(multiclass_json_report)
-    print(md_report)
-
-    assert (
-        "Could not generate report - Reason: err=TemplateNotFound('does_not_exist.md')"
-        in md_report
-    )
-
-
-# @pytest.mark.xfail
-def test_generate_report_from_combined_json(
-    sample_combined_json_report, report_generator
-):
-
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        report_settings = PipelineExecutionReportSettings()
-        report_settings.report_folder = tmpdirname
-        md_report = PipelineExecutionReport(
-            settings=report_settings
-        ).generate_report_from_combined_json(sample_combined_json_report)
-
-        json_filename = os.path.join(tmpdirname, "pipeline_execution_report.json")
-        assert os.path.exists(json_filename)
-
-        data = report_generator.load_json_report(json_filename)
-        assert data["execution_definition"]["PipelineExecutionStatus"] == "Succeeded"
-
-        md_filename = os.path.join(tmpdirname, "pipeline_execution_report.md")
-        assert os.path.exists(md_filename)
-
-        with open(md_filename, "r") as test_file:
-            lines = test_file.readlines()
-        assert "PipelineExecutionStatus: Succeeded" in lines[8]
