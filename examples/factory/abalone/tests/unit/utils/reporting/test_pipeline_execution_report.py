@@ -7,7 +7,10 @@ import pytest
 
 # Module under test
 from abalone.utils.reporting.pipeline_execution_report import (
-    PipelineExecutionReport, PipelineExecutionReportSettings)
+    PipelineExecutionReport, 
+    PipelineExecutionReportContext,
+    PipelineExecutionReportSettings
+)
 
 ####
 # fixtures
@@ -180,6 +183,24 @@ def failed_a_step_json_report(json_path, report_generator):
     return report_generator.load_json_report(filepath)
 
 
+@pytest.fixture
+def definition_parameters_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "parameters", "definition_parameters_report.json")
+    return report_generator.load_json_report(filepath)
+
+
+@pytest.fixture
+def default_parameters_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "parameters", "default_parameters_report.json")
+    return report_generator.load_json_report(filepath)
+
+
+@pytest.fixture
+def mixed_parameters_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "parameters", "mixed_parameters_report.json")
+    return report_generator.load_json_report(filepath)
+
+
 ####
 # API
 
@@ -187,9 +208,15 @@ def failed_a_step_json_report(json_path, report_generator):
 def test_create_combined_json_report(json_report_with_fillers):
     # test robustness
     # should log and provide filler for execution status that it could not fetch
-    json_dict = PipelineExecutionReport().create_combined_json_report(
-        None, None, None, "s3:wrong_path"
+    report_context = PipelineExecutionReportContext(
+        sagemaker_session=None,
+        pipeline=None,
+        execution=None,
+        eval_file_uri="s3:wrong_path",
+        execution_parameters=None
     )
+
+    json_dict = PipelineExecutionReport().create_combined_json_report(report_context)
 
     print(json_dict)
 
@@ -228,7 +255,7 @@ def test_create_markdown_report(sample_combined_json_report):
         sample_combined_json_report
     )
 
-    status_content = "PipelineExecutionStatus: Succeeded"
+    status_content = "| PipelineExecutionStatus | Succeeded |"
     assert status_content in md_report
 
 
@@ -255,7 +282,7 @@ def test_generate_report_from_combined_json(
 
         with open(md_filename, "r") as test_file:
             lines = test_file.readlines()
-        assert "PipelineExecutionStatus: Succeeded" in lines[8]
+        assert "| PipelineExecutionStatus | Succeeded |" in lines[8]
 
 ####
 # resilience
@@ -450,6 +477,51 @@ def test_long_uri_formatting(sample_combined_json_report):
 
 
 ####
+# presentation - parameters
+
+# @pytest.mark.xfail
+def test_no_parameters_formatting(definition_parameters_json_report):
+    # no parameters provided - show only default
+    md_report = PipelineExecutionReport().create_markdown_report(
+        definition_parameters_json_report
+    )
+
+    print(md_report)
+
+    assert "| ModelApprovalStatus | String | PendingManualApproval |  |" in md_report
+
+# @pytest.mark.xfail
+def test_default_parameters_formatting(default_parameters_json_report):
+    # a parameters section is empty - show is running with default
+    md_report = PipelineExecutionReport().create_markdown_report(
+        default_parameters_json_report
+    )
+
+    print(md_report)
+
+    assert "| ModelApprovalStatus | String | PendingManualApproval |  |" in md_report
+
+# @pytest.mark.xfail
+def test_custom_parameters_formatting(mixed_parameters_json_report):
+    # a parameters section is empty - show is runnning with default and custom
+    md_report = PipelineExecutionReport().create_markdown_report(
+        mixed_parameters_json_report
+    )
+
+    print(md_report)
+
+    assert "| ModelApprovalStatus | String | PendingManualApproval | Approval |" in md_report
+    
+    
+# TODO test the combined json for new items
+# TODO test the report for rendering after summary 
+
+#    assert "Report type: multiclass_classification_metrics" in md_report
+#    assert "Confusion matrix" in md_report
+#    assert "| no  | 1180 | 510 |" in md_report
+
+
+####
 # presentation - dates
 
 # @pytest.mark.xfail
@@ -532,5 +604,3 @@ def test_multiclass_formatting(multiclass_json_report):
     assert "| weighted_recall" in md_report
     assert "| weighted_precision" in md_report
     assert "| accuracy" in md_report
-
-

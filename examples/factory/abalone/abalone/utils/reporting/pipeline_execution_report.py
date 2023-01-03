@@ -15,7 +15,6 @@ from sagemaker.lineage.visualizer import LineageTableVisualizer
 
 from abalone.utils.reporting.commons import BaseReport
 
-# FIXME add pipemine parameters to the report
 # FIXME truncated urls in lineage
 
 pd.set_option("display.max_colwidth", None)
@@ -29,6 +28,7 @@ class PipelineExecutionReportContext:
     pipeline: Any
     execution: Any
     eval_file_uri: str = None
+    execution_parameters: dict = None
     # TODO optional eval
 
 
@@ -73,12 +73,7 @@ class PipelineExecutionReport(BaseReport):
             The context of the execution (sagemaker session, pipeline, execution... .
         """
         logging.info("collecting information for combined report")
-        json_report = self.create_combined_json_report(
-            context.sagemaker_session,
-            context.pipeline,
-            context.execution,
-            context.eval_file_uri,
-        )
+        json_report = self.create_combined_json_report(context)
         self.generate_report_from_combined_json(json_report)
 
     def generate_report_from_combined_json(self, json_report: dict) -> None:
@@ -102,7 +97,7 @@ class PipelineExecutionReport(BaseReport):
         self.write_markdown_report(md_file_path, md_report)
 
     def create_combined_json_report(
-        self, sagemaker_session, pipeline, execution, eval_file_uri
+        self, context: PipelineExecutionReportContext
     ) -> dict:
         """Collect pipeline's run information and creates a JSON document.
 
@@ -124,16 +119,16 @@ class PipelineExecutionReport(BaseReport):
             "definition", "execution_definition", "execution_steps", "lineage", "evaluation".
             An exemple of this document could be found in unit tests.
         """
-        definition_report = self._get_pipeline_definition(pipeline)
+        definition_report = self._get_pipeline_definition(context.pipeline)
 
-        execution_definition_report = self._get_execution_definition(execution)
+        execution_definition_report = self._get_execution_definition(context.execution)
 
-        execution_steps_report = self._get_execution_steps(execution)
+        execution_steps_report = self._get_execution_steps(context.execution)
 
-        lineage_report = self._get_lineage(sagemaker_session, execution_steps_report)
+        lineage_report = self._get_lineage(context.sagemaker_session, execution_steps_report)
 
-        if eval_file_uri:
-            evaluation_report = self._get_evaluation(sagemaker_session, eval_file_uri)
+        if context.eval_file_uri:
+            evaluation_report = self._get_evaluation(context.sagemaker_session, context.eval_file_uri)
         else:
             evaluation_report = { "error_message": "No evaluation file provided" }
 
@@ -144,8 +139,14 @@ class PipelineExecutionReport(BaseReport):
             "execution_definition": execution_definition_report,
             "execution_steps": list(reversed(execution_steps_report)),
             "lineage": lineage_report,
-            "evaluation": evaluation_report,
+            "execution_parameters": context.execution_parameters,
+            "evaluation": evaluation_report
         }
+        
+        ## mimic old behavior - parameters were ignored
+        if not context.execution_parameters:
+            # remove None item
+            combined_report.pop("execution_parameters")
 
         return self._enhance_json(combined_report)
 
@@ -173,10 +174,18 @@ class PipelineExecutionReport(BaseReport):
                 self.settings.markdown_template_filename
             )
 
+            # Avoid to fix all the test data to add an empty element
+            if "execution_parameters" in json_report:
+                execution_parameters = json_report["execution_parameters"]
+            else:
+                execution_parameters = {}
+
             content = template.render(
+                definition=json_report["definition"],
                 execution_definition=json_report["execution_definition"],
                 execution_steps=json_report["execution_steps"],
                 evaluation=json_report["evaluation"],
+                execution_parameters=execution_parameters,
                 lineage=json_report["lineage"],
             )
 
