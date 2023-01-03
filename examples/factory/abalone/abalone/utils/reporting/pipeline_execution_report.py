@@ -2,13 +2,14 @@
 """
 import json
 import logging
+import os
 import traceback
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Dict, List
 
-from dataclasses import dataclass
-
 import pandas as pd
+import sagemaker
 from jinja2 import Environment, FileSystemLoader
 from sagemaker.lineage.visualizer import LineageTableVisualizer
 
@@ -16,11 +17,9 @@ from abalone.utils.reporting.commons import BaseReport
 
 # FIXME add pipemine parameters to the report
 # FIXME truncated urls in lineage
-
-# TODO set path for json et md
-# TODO set path for buildpath
-# TODO ajout d'un builder
-
+# TODO display failture error in summary
+# TODO display step failure
+# TODO do not consider no evaluation file as an error 
 
 pd.set_option("display.max_colwidth", None)
 
@@ -28,58 +27,91 @@ pd.set_option("display.max_colwidth", None)
 @dataclass
 class PipelineExecutionReportContext:
     """Class for keeping track of report inputs."""
-    sagemaker_client: Any
+
+    sagemaker_session: Any
     pipeline: Any
     execution: Any
-    eval_file_uri: str
+    eval_file_uri: str = None
     # TODO optional eval
-    
+
 
 @dataclass
 class PipelineExecutionReportSettings:
     """Class for keeping track of report inputs."""
+
     # Directory where the templates could be found.
-    templates_folder: str = 'templates/'
+    templates_folder: str = "templates/"
     # Name of file to be used as a template.
-    markdown_template_filename: str = 'pipeline_execution_report.md'
+    markdown_template_filename: str = "pipeline_execution_report.md"
+    # Name of folder where files created.
+    report_folder: str = "target"
+    # Name of file to be created.
+    report_filename_radix: str = "pipeline_execution_report"
     # TODO target folder and files
-    
+
 
 class PipelineExecutionReport(BaseReport):
-    """This class collect information about the pipeline execution, 
+    """This class collect information about the pipeline execution,
     creates a JSON file and format most information information in a markdown report.
     """
 
     # class variables shared by all instance
 
-    def __init__(self, settings: PipelineExecutionReportSettings = PipelineExecutionReportSettings()) -> Any:
+    def __init__(
+        self,
+        settings: PipelineExecutionReportSettings = PipelineExecutionReportSettings(),
+    ) -> Any:
         # instance variable unique to each instance
         self.settings = settings
 
         # initializations
         pass
 
+    def generate_report(self, context: PipelineExecutionReportContext) -> None:
+        """Collect pipeline's run information, save a JSON document and a markdown report.
 
-    def generate_report(self, context: PipelineExecutionReportContext):
+        Parameters
+        ----------
+        context: PipelineExecutionReportContext
+            The context of the execution (sagemaker session, pipeline, execution... .
+        """
+        logging.info("collecting information for combined report")
         json_report = self.create_combined_json_report(
-            self.context.sagemaker, 
-            self.context.pipeline, 
-            self.context.execution, 
-            self.context.eval_file_uri
+            context.sagemaker_session,
+            context.pipeline,
+            context.execution,
+            context.eval_file_uri,
         )
-        json_file_name = os.path.join(buildpath, "report.json")
-        self.write_json_report(json_file_name, json_report)
+        self.generate_report_from_combined_json(json_report)
+
+    def generate_report_from_combined_json(self, json_report: dict) -> None:
+        """Save a JSON document and a markdown report.
+
+        Parameters
+        ----------
+        json_report: dict
+            The data collected by create_combined_json_report.
+        """
+        logging.info("saving JSON and markdown reports")
+        os.makedirs(self.settings.report_folder, exist_ok=True)
+
+        json_file_name = f"{self.settings.report_filename_radix}.json"
+        json_file_path = os.path.join(self.settings.report_folder, json_file_name)
+        self.write_json_report(json_file_path, json_report)
+
         md_report = self.create_markdown_report(json_report)
-        mdfile_name = os.path.join(buildpath, "report.md")
-        self.write_markdown_report(mdfile_name, md_report)
+        md_file_name = f"{self.settings.report_filename_radix}.md"
+        md_file_path = os.path.join(self.settings.report_folder, md_file_name)
+        self.write_markdown_report(md_file_path, md_report)
 
-
-    def create_combined_json_report(self, sagemaker, pipeline, execution, eval_file_uri) -> dict:
+    def create_combined_json_report(
+        self, sagemaker_session, pipeline, execution, eval_file_uri
+    ) -> dict:
         """Collect pipeline's run information and creates a JSON document.
 
         Parameters
         ----------
-        sagemaker: sagemaker.workflow.pipeline_context.PipelineSession
+        sagemaker_session: sagemaker.workflow.pipeline_context.PipelineSession
             The sagemaker session running the pipeline.
         pipeline: sagemaker.workflow.pipeline.Pipeline
             The pipeline instance.
@@ -101,9 +133,9 @@ class PipelineExecutionReport(BaseReport):
 
         execution_steps_report = self._get_execution_steps(execution)
 
-        lineage_report = self._get_lineage(sagemaker, execution_steps_report)
+        lineage_report = self._get_lineage(sagemaker_session, execution_steps_report)
 
-        evaluation_report = self._get_evaluation(sagemaker, eval_file_uri)
+        evaluation_report = self._get_evaluation(sagemaker_session, eval_file_uri)
 
         # combine dicts
         logging.info("building combined report")
@@ -117,10 +149,7 @@ class PipelineExecutionReport(BaseReport):
 
         return self._enhance_json(combined_report)
 
-
-    def create_markdown_report(self,
-                               json_report: dict
-                              ) -> str:
+    def create_markdown_report(self, json_report: dict) -> str:
         """Turn the pipeline report's dict into a Markdown document.
 
         The Markdown document is created from the template located in templates/pipeline_report.md.
@@ -137,8 +166,12 @@ class PipelineExecutionReport(BaseReport):
         """
         logging.info("generating markdown content")
         try:
-            environment = Environment(loader=FileSystemLoader(self.settings.templates_folder))
-            template = environment.get_template(self.settings.markdown_template_filename)
+            environment = Environment(
+                loader=FileSystemLoader(self.settings.templates_folder)
+            )
+            template = environment.get_template(
+                self.settings.markdown_template_filename
+            )
 
             content = template.render(
                 execution_definition=json_report["execution_definition"],
@@ -151,13 +184,15 @@ class PipelineExecutionReport(BaseReport):
         except Exception as err:
             return f"Could not generate report - Reason: {err=}"
 
-
     def _fallback_report_data(self, exc, message: str) -> Dict[str, Any]:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         reason_message = template.format(type(exc).__name__, exc.args)
         stack_trace = traceback.format_exc()
-        return {"error_message": message, "error_reason": reason_message, "stack_trace": stack_trace}
-
+        return {
+            "error_message": message,
+            "error_reason": reason_message,
+            "stack_trace": stack_trace,
+        }
 
     def _get_pipeline_definition(self, pipeline) -> Dict[str, Any]:
         # get pipeline definition as dict
@@ -165,9 +200,10 @@ class PipelineExecutionReport(BaseReport):
         try:
             definition_report = json.loads(pipeline.definition())
         except (AttributeError, TypeError, ValueError, json.JSONDecodeError) as exc:
-            definition_report = self._fallback_report_data(exc, "Could not read pipeline definitions")
+            definition_report = self._fallback_report_data(
+                exc, "Could not read pipeline definitions"
+            )
         return definition_report
-
 
     def _get_execution_definition(self, execution) -> Dict[str, Any]:
         # get the pipeline execution definition as dict
@@ -175,9 +211,10 @@ class PipelineExecutionReport(BaseReport):
         try:
             execution_definition_report = execution.describe()
         except (AttributeError, TypeError, ValueError) as exc:
-            execution_definition_report = self._fallback_report_data(exc, "Could not read execution definition")
+            execution_definition_report = self._fallback_report_data(
+                exc, "Could not read execution definition"
+            )
         return execution_definition_report
-
 
     def _get_execution_steps(self, execution) -> List[Dict[str, Any]]:
         # list the steps in the execution as a list of dicts
@@ -185,39 +222,47 @@ class PipelineExecutionReport(BaseReport):
         try:
             execution_steps_report = execution.list_steps()
         except (AttributeError, TypeError, ValueError) as exc:
-            error_status = self._fallback_report_data(exc, "Could not read execution steps")
+            error_status = self._fallback_report_data(
+                exc, "Could not read execution steps"
+            )
             execution_steps_report = [error_status]
         return execution_steps_report
 
-
-    def _get_lineage(self, sagemaker, execution_steps_report) -> List[Dict[str, Any]]:
+    def _get_lineage(
+        self, sagemaker_session, execution_steps_report
+    ) -> List[Dict[str, Any]]:
         # get the lineage of the artifacts generated by the pipeline as a list of dicts
         logging.info("fetching lineage")
         try:
-            viz = LineageTableVisualizer(sagemaker.session.Session())
+            viz = LineageTableVisualizer(sagemaker_session.session.Session())
             lineage_report = []
             for execution_step in reversed(execution_steps_report):
                 step_name = execution_step["StepName"]
                 lineage_df = viz.show(pipeline_execution_step=execution_step)
                 if isinstance(lineage_df, pd.DataFrame):
-                    step_info = {"stepname": step_name, "items": lineage_df.to_dict(orient="records")}
+                    step_info = {
+                        "stepname": step_name,
+                        "items": lineage_df.to_dict(orient="records"),
+                    }
                     lineage_report.append(step_info)
         except (AttributeError, TypeError, ValueError) as exc:
             error_status = self._fallback_report_data(exc, "Could not read lineage")
             lineage_report = [error_status]
         return lineage_report
 
-
-    def _get_evaluation(self, sagemaker, eval_file_uri) -> Dict[str, Any]:
+    def _get_evaluation(self, sagemaker_session, eval_file_uri) -> Dict[str, Any]:
         # get the model evaluation as dict
         logging.info("fetching evaluation report")
         try:
-            evaluation_json = sagemaker.s3.S3Downloader.read_file(f"{eval_file_uri}/evaluation.json")
+            evaluation_json = sagemaker_session.s3.S3Downloader.read_file(
+                f"{eval_file_uri}/evaluation.json"
+            )
             evaluation_report = json.loads(evaluation_json)
         except (AttributeError, TypeError, ValueError) as exc:
-            evaluation_report = self._fallback_report_data(exc, "Could not read evaluation report")
+            evaluation_report = self._fallback_report_data(
+                exc, "Could not read evaluation report"
+            )
         return evaluation_report
-
 
     def _enhance_json(self, json_report: dict) -> Dict[str, Any]:
         dateformat = "%d/%m/%Y %H:%M:%S"
@@ -228,7 +273,9 @@ class PipelineExecutionReport(BaseReport):
                 step[f"{key}AsDatetime"] = as_datetime
                 step[f"{key}Short"] = datetime.strftime(as_datetime, dateformat)
             except (ValueError, TypeError):
-                step[f"{key}Short"] = "Not Available"  # provide a placeholder for report
+                step[
+                    f"{key}Short"
+                ] = "Not Available"  # provide a placeholder for report
 
         if "error_message" not in json_report["execution_steps"][0]:
             for step in json_report["execution_steps"]:
