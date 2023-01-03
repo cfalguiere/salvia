@@ -5,6 +5,8 @@
 ## Summary
 
 {% if "error_message" not in execution_definition  -%}
+| Name      | Value | 
+| --------- | ----- | 
 | PipelineExecutionArn | {{ execution_definition['PipelineExecutionArn'] }} |
 | PipelineExecutionDisplayName | {{ execution_definition['PipelineExecutionDisplayName'] }} |
 | PipelineExecutionStatus | {{ execution_definition['PipelineExecutionStatus'] }} |
@@ -13,7 +15,7 @@
 | TrialName | {{ execution_definition['PipelineExperimentConfig']['TrialName'] }} |
 | UserProfileName | {{ execution_definition['LastModifiedBy']['UserProfileName'] }} |
 {% if "FailureReason" in execution_definition  -%}
-FailureReason: {{ execution_definition['FailureReason'] }}
+| FailureReason | {{ execution_definition['FailureReason'] }} |
 {%- endif  %}
 {%- else  %}
 Data not available:
@@ -30,7 +32,7 @@ Data not available:
 {% set name = parameter['Name'] -%}
 {% if name in execution_parameters -%}
 | {{parameter['Name']}} | {{parameter['Type']}} | {{parameter['DefaultValue']}} | {{execution_parameters[name]}} |
-{%- else  %}
+{%- else -%}
 | {{parameter['Name']}} | {{parameter['Type']}} | {{parameter['DefaultValue']}} |  |
 {%- endif  %}
 {% endfor %}
@@ -43,7 +45,7 @@ Data not available:
 {% for step in execution_steps -%}
 {% set has_error = 'FailureReason' in step -%}
 {% set reason = step['FailureReason'] if has_error else "" -%}
-| {{step['StepName']}} | {{step['StartTimeShort']}} | {{step['EndTimeShort']}} | {{step['StepStatus']}} | {{reason}} |
+| {{step['StepName']}} | {{step['StartTimeShort']}} | {{step['EndTimeShort']}} | {{step['StepStatus']}} | {{reason | replace("\n", " ")}} |
 {% endfor %}
 {%- else  %}
 Data not available:
