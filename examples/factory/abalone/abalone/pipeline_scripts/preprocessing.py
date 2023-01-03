@@ -52,7 +52,10 @@ def preprocess(base_dir):
     numeric_features = list(feature_columns_names)
     numeric_features.remove("sex")
     numeric_transformer = Pipeline(
-        steps=[("imputer", SimpleImputer(strategy="median")), ("scaler", StandardScaler())]
+        steps=[
+            ("imputer", SimpleImputer(strategy="median")),
+            ("scaler", StandardScaler()),
+        ]
     )
 
     categorical_features = ["sex"]
@@ -88,5 +91,4 @@ def preprocess(base_dir):
 
 if __name__ == "__main__":
     base_dir = "/opt/ml/processing"
-    preproccess(base_dir)
-
+    preprocess(base_dir)
