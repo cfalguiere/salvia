@@ -17,9 +17,6 @@ from abalone.utils.reporting.commons import BaseReport
 
 # FIXME add pipemine parameters to the report
 # FIXME truncated urls in lineage
-# TODO display failture error in summary
-# TODO display step failure
-# TODO do not consider no evaluation file as an error 
 
 pd.set_option("display.max_colwidth", None)
 
@@ -135,7 +132,10 @@ class PipelineExecutionReport(BaseReport):
 
         lineage_report = self._get_lineage(sagemaker_session, execution_steps_report)
 
-        evaluation_report = self._get_evaluation(sagemaker_session, eval_file_uri)
+        if eval_file_uri:
+            evaluation_report = self._get_evaluation(sagemaker_session, eval_file_uri)
+        else:
+            evaluation_report = { "error_message": "No evaluation file provided" }
 
         # combine dicts
         logging.info("building combined report")

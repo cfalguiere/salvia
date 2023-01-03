@@ -12,6 +12,9 @@ PipelineExecutionDescription: {{ execution_definition['PipelineExecutionDescript
 ExperimentName: {{ execution_definition['PipelineExperimentConfig']['ExperimentName'] }}
 TrialName: {{ execution_definition['PipelineExperimentConfig']['TrialName'] }}
 UserProfileName: {{ execution_definition['LastModifiedBy']['UserProfileName'] }}
+{% if "FailureReason" in execution_definition  -%}
+FailureReason: {{ execution_definition['FailureReason'] }}
+{%- endif  %}
 {%- else  %}
 Data not available:
 {{ execution_definition['error_message'] }}
@@ -22,16 +25,22 @@ Data not available:
 ## Steps
 
 {% if "error_message" not in execution_steps[0]  -%}
-| Name      | StartTime | EndTime | StepStatus |
-| --------- | --------- | ------- | ---------- |
+| Name      | StartTime | EndTime | StepStatus | Reason |
+| --------- | --------- | ------- | ---------- | ------ |
 {% for step in execution_steps -%}
-| {{step['StepName']}} | {{step['StartTimeShort']}} | {{step['EndTimeShort']}} | {{step['StepStatus']}} |
+{% set has_error = 'FailureReason' in step -%}
+{% set reason = step['FailureReason'] if has_error else "" -%}
+| {{step['StepName']}} | {{step['StartTimeShort']}} | {{step['EndTimeShort']}} | {{step['StepStatus']}} | {{reason}} |
 {% endfor -%}
 {%- else  %}
 Data not available:
 {{ execution_steps[0]['error_message'] }}
+{% if "error_reason" in execution_steps[0]  -%}
 {{ execution_steps[0]['error_reason'] }}
+{%- endif  %}
+{% if "stack_trace" in execution_steps[0]  -%}
 {{ execution_steps[0]['stack_trace'] }}
+{%- endif  %}
 {%- endif  %}
 
 ## Lineage

@@ -174,6 +174,12 @@ def regression_one_metric_json_report(json_path, report_generator):
     return report_generator.load_json_report(filepath)
 
 
+@pytest.fixture
+def failed_a_step_json_report(json_path, report_generator):
+    filepath = os.path.join(json_path, "failed_run", "failed_a_step_report.json")
+    return report_generator.load_json_report(filepath)
+
+
 ####
 # API
 
@@ -182,7 +188,7 @@ def test_create_combined_json_report(json_report_with_fillers):
     # test robustness
     # should log and provide filler for execution status that it could not fetch
     json_dict = PipelineExecutionReport().create_combined_json_report(
-        None, None, None, None
+        None, None, None, "s3:wrong_path"
     )
 
     print(json_dict)
@@ -255,21 +261,6 @@ def test_generate_report_from_combined_json(
 # resilience
 
 # @pytest.mark.xfail
-def test_date_formatting(sample_combined_json_report):
-    # shorten date format
-    md_report = PipelineExecutionReport().create_markdown_report(
-        sample_combined_json_report
-    )
-
-    print(md_report)
-
-    step_content = (
-        "| AbaloneProcess | 02/12/2022 21:04:09 | 02/12/2022 21:08:10 | Succeeded |"
-    )
-    assert step_content in md_report
-
-
-# @pytest.mark.xfail
 def test_create_markdown_report_with_fillers(json_report_with_fillers):
     md_report = PipelineExecutionReport().create_markdown_report(
         json_report_with_fillers
@@ -322,6 +313,41 @@ def test_template_not_found(sample_combined_json_report):
         "Could not generate report - Reason: err=TemplateNotFound('does_not_exist.md')"
         in md_report
     )
+
+
+####
+# presentation - failures
+
+
+# @pytest.mark.xfail
+def test_show_run_failure(failed_a_step_json_report):
+    report_generator = PipelineExecutionReport()
+    md_report = report_generator.create_markdown_report(failed_a_step_json_report)
+    print(md_report)
+
+    execution_definition = failed_a_step_json_report["execution_definition"]
+    assert execution_definition["FailureReason"] in md_report
+
+
+# @pytest.mark.xfail
+def test_show_step_failure(failed_a_step_json_report):
+    report_generator = PipelineExecutionReport()
+    md_report = report_generator.create_markdown_report(failed_a_step_json_report)
+
+    print(md_report)
+
+    execution_steps = failed_a_step_json_report["execution_steps"]
+    assert execution_steps[0]["FailureReason"] in md_report
+
+
+# @pytest.mark.xfail
+def test_no_eval_provided_is_not_failure(failed_a_step_json_report):
+    report_generator = PipelineExecutionReport()
+    md_report = report_generator.create_markdown_report(failed_a_step_json_report)
+
+    print(md_report)
+    
+    assert "No evaluation file provided" in md_report
 
 
 ####
@@ -422,6 +448,7 @@ def test_long_uri_formatting(sample_combined_json_report):
 
     assert "s3://..." not in md_report
 
+
 ####
 # presentation - dates
 
@@ -438,6 +465,22 @@ def test_enhance_date(raw_combined_json_report):
     assert "EndTimeAsDatetime" in step0
     assert isinstance(step0["EndTimeAsDatetime"], datetime)
     assert step0["EndTimeShort"] == "02/12/2022 21:08:10"
+
+
+# @pytest.mark.xfail
+def test_date_formatting(sample_combined_json_report):
+    # shorten date format
+    md_report = PipelineExecutionReport().create_markdown_report(
+        sample_combined_json_report
+    )
+
+    print(md_report)
+
+    step_content = (
+        "| AbaloneProcess | 02/12/2022 21:04:09 | 02/12/2022 21:08:10 | Succeeded |"
+    )
+    assert step_content in md_report
+
 
 ####
 # presentation - evaluation formats
