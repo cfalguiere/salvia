@@ -84,10 +84,17 @@ def lint(session):
 
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def md_lint(session):
-    """Lint markdown files."""
+    """Lint markdown files.
+    
+    rules: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+    """
     session.install("pymarkdownlnt")
-    # diasble rule limiting line length
-    session.run("pymarkdown", "--disable-rules", "MD013", "scan", "templates", "./README.md")
+    # disable all rules checking empty lines and line length on the generated report
+    session.run("pymarkdown", "--disable-rules", "MD013,MD012,MD041,MD047,MD041,MD022", "scan", "docs/report-examples")
+    # ignore MD041 because of jinja comment on first line and MD013 because of long lines due to variables
+    session.run("pymarkdown", "--disable-rules", "MD041,MD013", "scan", "templates")
+    # all rules 
+    session.run("pymarkdown", "scan", "./README.md")  # TODO "docs/*.md", 
 
 
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)

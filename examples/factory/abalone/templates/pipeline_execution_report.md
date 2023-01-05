@@ -5,8 +5,8 @@
 ## Summary
 
 {% if "error_message" not in execution_definition  -%}
-| Name      | Value | 
-| --------- | ----- | 
+| Name      | Value |
+| --------- | ----- |
 | PipelineExecutionArn | {{ execution_definition['PipelineExecutionArn'] }} |
 | PipelineExecutionDisplayName | {{ execution_definition['PipelineExecutionDisplayName'] }} |
 | PipelineExecutionStatus | {{ execution_definition['PipelineExecutionStatus'] }} |
@@ -26,8 +26,8 @@ Data not available:
 
 ## Parameters
 
-| Name      | Type | DefaultValue | Value | 
-| --------- | ---- | ------------ | ----- | 
+| Name      | Type | DefaultValue | Value |
+| --------- | ---- | ------------ | ----- |
 {% for parameter in definition["Parameters"] -%}
 {% set name = parameter['Name'] -%}
 {% if name in execution_parameters -%}
