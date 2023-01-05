@@ -24,7 +24,7 @@ nox.options.envdir = ".venv"
 nox.options.reuse_existing_virtualenvs = False
 
 
-@nox.session(venv_backend="virtualenv", python=PYTHON_VERSION)
+@nox.session(venv_backend="virtualenv", python=PYTHON_VERSION, tags=["qcheck"])
 def format(session):
     """Check Python code for compliance with black formatter and imports order.
 
@@ -58,7 +58,7 @@ def qlint(session):
     )
 
 
-@nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
+@nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION, tags=["qcheck"])
 def lint(session):
     """Check Python code with more rules.
 
@@ -87,7 +87,7 @@ def lint(session):
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def md_lint(session):
     """Lint markdown files.
-    
+
     rules: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
     """
     session.log("============= markdown lint ============")
@@ -96,8 +96,8 @@ def md_lint(session):
     session.run("pymarkdown", "--disable-rules", "MD013,MD012,MD041,MD047,MD041,MD022", "scan", "docs/report-examples")
     # ignore MD041 because of jinja comment on first line and MD013 because of long lines due to variables
     session.run("pymarkdown", "--disable-rules", "MD041,MD013", "scan", "templates")
-    # all rules 
-    session.run("pymarkdown", "scan", "./README.md")  # TODO "docs/*.md", 
+    # all rules
+    session.run("pymarkdown", "scan", "./README.md")  # TODO "docs/*.md",
 
 
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
@@ -113,25 +113,27 @@ def pytype(session):
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def mypy(session):
     """Check types - configuration in mypy.ini.
-    
+
     config file documentation https://mypy.readthedocs.io/en/stable/config_file.html
     """
     session.log("================ mypy ================")
     session.install("mypy")
     # session.run("pip", "install", "--quiet", "-r", "requirements.txt")
     session.install("--quiet", "-e", ".")
-    session.run("mypy", 
-                "--install-types", 
-                "--non-interactive", 
-                "--config-file", 
-                ".mypy.ini", 
-                "--python-version", 
-                PYTHON_VERSION, 
-                "abalone")
+    session.run(
+        "mypy",
+        "--install-types",
+        "--non-interactive",
+        "--config-file",
+        ".mypy.ini",
+        "--python-version",
+        PYTHON_VERSION,
+        "abalone",
+    )
     # removed tests from the target folders as changing rules does not work
 
 
-@nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
+@nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION, tags=["qcheck"])
 def unit_tests(session):
     """Run unit tests - configuration in pytest.ini."""
     session.log("============== unit tests ==============")
