@@ -1,4 +1,7 @@
 """This module contains helper functions to create pipeline's run summaries.
+
+Collects information about the pipeline execution, creates a JSON file, saves the json file,
+formats information as a markdown report, and saves the markdown report.
 """
 import json
 import logging
@@ -6,58 +9,83 @@ import os
 import traceback
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, NewType, Optional
 
 import pandas as pd
-import sagemaker
 from jinja2 import Environment, FileSystemLoader
 from sagemaker.lineage.visualizer import LineageTableVisualizer
 
-from abalone.utils.reporting.commons import BaseReport
+from abalone.utils.reporting.commons import BaseReport, MarkDownContent, ReportContent
 
 # FIXME truncated urls in lineage
 
 pd.set_option("display.max_colwidth", None)
 
 
+S3LocationURI = NewType("S3LocationURI", str)
+
+
 @dataclass
 class PipelineExecutionReportContext:
-    """Class for keeping track of report inputs."""
+    """Class for keeping track of report context and data.
+
+    Constructor Arguments
+    ---------------------
+    sagemaker_session: sagemaker.workflow.pipeline_context.PipelineSession
+        The sagemaker session running the pipeline.
+    pipeline: sagemaker.workflow.pipeline.Pipeline
+        The pipeline instance.
+    execution: sagemaker.workflow.pipeline._PipelineExecution
+        The pipeline execution instance.
+    eval_file_uri: S3LocationURI, optional
+        The URL on S3 of the file created by evaluate.
+    execution_parameters: dict, optional
+        Execution parameters passed as argument to the pipeline start.
+    """
 
     sagemaker_session: Any
     pipeline: Any
     execution: Any
-    eval_file_uri: str = None
-    execution_parameters: dict = None
-    # TODO optional eval
+    eval_file_uri: Optional[S3LocationURI] = None
+    execution_parameters: Optional[Dict[str, str]] = None
 
 
 @dataclass
 class PipelineExecutionReportSettings:
-    """Class for keeping track of report inputs."""
+    """Class for keeping track of report configuration.
 
-    # Directory where the templates could be found.
+    Constructor Arguments
+    ---------------------
+    templates_folder: str, defaults to "templates/"
+        Directory where the templates could be found.
+    markdown_template_filename: str, defaults to "pipeline_execution_report.md"
+        Name of file to be used as a template.
+    report_folder: str, defaults to "target"
+        Name of folder where files created.
+    report_filename_radix: str, defaults to "pipeline_execution_report"
+        Name of file to be created. .json and .md will be added.
+    """
+
     templates_folder: str = "templates/"
-    # Name of file to be used as a template.
     markdown_template_filename: str = "pipeline_execution_report.md"
-    # Name of folder where files created.
     report_folder: str = "target"
-    # Name of file to be created.
     report_filename_radix: str = "pipeline_execution_report"
-    # TODO target folder and files
 
 
 class PipelineExecutionReport(BaseReport):
-    """This class collect information about the pipeline execution,
-    creates a JSON file and format most information information in a markdown report.
-    """
+    """Class for generating a pipeline execution report."""
 
     # class variables shared by all instance
+    _default_settings = PipelineExecutionReportSettings()
 
-    def __init__(
-        self,
-        settings: PipelineExecutionReportSettings = PipelineExecutionReportSettings(),
-    ) -> Any:
+    def __init__(self, settings: PipelineExecutionReportSettings = _default_settings) -> None:
+        """Initialize the pipeline execution report.
+
+        Constructor Arguments
+        ---------------------
+        settings: PipelineExecutionReportSettings
+            Configuration of the report. defaults to _default_settings.
+        """
         # instance variable unique to each instance
         self.settings = settings
 
@@ -76,12 +104,12 @@ class PipelineExecutionReport(BaseReport):
         json_report = self.create_combined_json_report(context)
         self.generate_report_from_combined_json(json_report)
 
-    def generate_report_from_combined_json(self, json_report: dict) -> None:
+    def generate_report_from_combined_json(self, json_report: ReportContent) -> None:
         """Save a JSON document and a markdown report.
 
         Parameters
         ----------
-        json_report: dict
+        json_report: PipelineExecutionContent
             The data collected by create_combined_json_report.
         """
         logging.info("saving JSON and markdown reports")
@@ -96,27 +124,24 @@ class PipelineExecutionReport(BaseReport):
         md_file_path = os.path.join(self.settings.report_folder, md_file_name)
         self.write_markdown_report(md_file_path, md_report)
 
-    def create_combined_json_report(
-        self, context: PipelineExecutionReportContext
-    ) -> dict:
+    def create_combined_json_report(self, context: PipelineExecutionReportContext) -> ReportContent:
         """Collect pipeline's run information and creates a JSON document.
 
         Parameters
         ----------
-        sagemaker_session: sagemaker.workflow.pipeline_context.PipelineSession
-            The sagemaker session running the pipeline.
-        pipeline: sagemaker.workflow.pipeline.Pipeline
-            The pipeline instance.
-        execution: sagemaker.workflow.pipeline._PipelineExecution
-            The pipeline execution instance.
-        eval_file_uri: str
-            The URL on S3 of the file created by evaluate.
+        context: PipelineExecutionReportContext
+            The context of the execution (sagemaker session, pipeline, execution... .
 
         Returns
         -------
         dict
-            a json document consisting in 5 sections
-            "definition", "execution_definition", "execution_steps", "lineage", "evaluation".
+            The content of the json document consisting in 6 sections
+            - "definition",
+            - "execution_definition",
+            - "execution_steps",
+            - "lineage",
+            - "execution_parameters",
+            - "evaluation"
             An exemple of this document could be found in unit tests.
         """
         definition_report = self._get_pipeline_definition(context.pipeline)
@@ -128,9 +153,9 @@ class PipelineExecutionReport(BaseReport):
         lineage_report = self._get_lineage(context.sagemaker_session, execution_steps_report)
 
         if context.eval_file_uri:
-            evaluation_report = self._get_evaluation(context.sagemaker_session, context.eval_file_uri)
+            evaluation_report = self._get_evaluation(context.sagemaker_session, S3LocationURI(context.eval_file_uri))
         else:
-            evaluation_report = { "error_message": "No evaluation file provided" }
+            evaluation_report = {"error_message": "No evaluation file provided"}
 
         # combine dicts
         logging.info("building combined report")
@@ -140,24 +165,24 @@ class PipelineExecutionReport(BaseReport):
             "execution_steps": list(reversed(execution_steps_report)),
             "lineage": lineage_report,
             "execution_parameters": context.execution_parameters,
-            "evaluation": evaluation_report
+            "evaluation": evaluation_report,
         }
-        
-        ## mimic old behavior - parameters were ignored
+
+        # mimic old behavior - parameters were ignored
         if not context.execution_parameters:
             # remove None item
             combined_report.pop("execution_parameters")
 
         return self._enhance_json(combined_report)
 
-    def create_markdown_report(self, json_report: dict) -> str:
+    def create_markdown_report(self, json_report: ReportContent) -> MarkDownContent:
         """Turn the pipeline report's dict into a Markdown document.
 
         The Markdown document is created from the template located in templates/pipeline_report.md.
 
         Parameters
         ----------
-        json_report: dict
+        json_report: PipelineExecutionContent
             The associative array created by create_combined_json_report.
 
         Returns
@@ -167,12 +192,8 @@ class PipelineExecutionReport(BaseReport):
         """
         logging.info("generating markdown content")
         try:
-            environment = Environment(
-                loader=FileSystemLoader(self.settings.templates_folder)
-            )
-            template = environment.get_template(
-                self.settings.markdown_template_filename
-            )
+            environment = Environment(loader=FileSystemLoader(self.settings.templates_folder), autoescape=True)
+            template = environment.get_template(self.settings.markdown_template_filename)
 
             # Avoid to fix all the test data to add an empty element
             if "execution_parameters" in json_report:
@@ -189,11 +210,11 @@ class PipelineExecutionReport(BaseReport):
                 lineage=json_report["lineage"],
             )
 
-            return content
+            return MarkDownContent(content)
         except Exception as err:
             return f"Could not generate report - Reason: {err=}"
 
-    def _fallback_report_data(self, exc, message: str) -> Dict[str, Any]:
+    def _fallback_report_data(self, exc: Exception, message: str) -> Dict[str, Any]:
         template = "An exception of type {0} occurred. Arguments:\n{1!r}"
         reason_message = template.format(type(exc).__name__, exc.args)
         stack_trace = traceback.format_exc()
@@ -209,9 +230,7 @@ class PipelineExecutionReport(BaseReport):
         try:
             definition_report = json.loads(pipeline.definition())
         except (AttributeError, TypeError, ValueError, json.JSONDecodeError) as exc:
-            definition_report = self._fallback_report_data(
-                exc, "Could not read pipeline definitions"
-            )
+            definition_report = self._fallback_report_data(exc, "Could not read pipeline definitions")
         return definition_report
 
     def _get_execution_definition(self, execution) -> Dict[str, Any]:
@@ -220,9 +239,7 @@ class PipelineExecutionReport(BaseReport):
         try:
             execution_definition_report = execution.describe()
         except (AttributeError, TypeError, ValueError) as exc:
-            execution_definition_report = self._fallback_report_data(
-                exc, "Could not read execution definition"
-            )
+            execution_definition_report = self._fallback_report_data(exc, "Could not read execution definition")
         return execution_definition_report
 
     def _get_execution_steps(self, execution) -> List[Dict[str, Any]]:
@@ -231,14 +248,12 @@ class PipelineExecutionReport(BaseReport):
         try:
             execution_steps_report = execution.list_steps()
         except (AttributeError, TypeError, ValueError) as exc:
-            error_status = self._fallback_report_data(
-                exc, "Could not read execution steps"
-            )
+            error_status = self._fallback_report_data(exc, "Could not read execution steps")
             execution_steps_report = [error_status]
         return execution_steps_report
 
     def _get_lineage(
-        self, sagemaker_session, execution_steps_report
+        self, sagemaker_session, execution_steps_report: List[Dict[str, Any]]
     ) -> List[Dict[str, Any]]:
         # get the lineage of the artifacts generated by the pipeline as a list of dicts
         logging.info("fetching lineage")
@@ -259,21 +274,17 @@ class PipelineExecutionReport(BaseReport):
             lineage_report = [error_status]
         return lineage_report
 
-    def _get_evaluation(self, sagemaker_session, eval_file_uri) -> Dict[str, Any]:
+    def _get_evaluation(self, sagemaker_session, eval_file_uri: S3LocationURI) -> Dict[str, Any]:
         # get the model evaluation as dict
         logging.info("fetching evaluation report")
         try:
-            evaluation_json = sagemaker_session.s3.S3Downloader.read_file(
-                f"{eval_file_uri}/evaluation.json"
-            )
+            evaluation_json = sagemaker_session.s3.S3Downloader.read_file(f"{eval_file_uri}/evaluation.json")
             evaluation_report = json.loads(evaluation_json)
         except (AttributeError, TypeError, ValueError) as exc:
-            evaluation_report = self._fallback_report_data(
-                exc, "Could not read evaluation report"
-            )
+            evaluation_report = self._fallback_report_data(exc, "Could not read evaluation report")
         return evaluation_report
 
-    def _enhance_json(self, json_report: dict) -> Dict[str, Any]:
+    def _enhance_json(self, json_report: ReportContent) -> ReportContent:
         dateformat = "%d/%m/%Y %H:%M:%S"
 
         def enhance_date(step, key):
@@ -282,9 +293,7 @@ class PipelineExecutionReport(BaseReport):
                 step[f"{key}AsDatetime"] = as_datetime
                 step[f"{key}Short"] = datetime.strftime(as_datetime, dateformat)
             except (ValueError, TypeError):
-                step[
-                    f"{key}Short"
-                ] = "Not Available"  # provide a placeholder for report
+                step[f"{key}Short"] = "Not Available"  # provide a placeholder for report
 
         if "error_message" not in json_report["execution_steps"][0]:
             for step in json_report["execution_steps"]:

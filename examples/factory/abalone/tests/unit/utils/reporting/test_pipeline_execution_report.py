@@ -7,13 +7,14 @@ import pytest
 
 # Module under test
 from abalone.utils.reporting.pipeline_execution_report import (
-    PipelineExecutionReport, 
+    PipelineExecutionReport,
     PipelineExecutionReportContext,
-    PipelineExecutionReportSettings
+    PipelineExecutionReportSettings,
 )
 
 ####
 # fixtures
+
 
 @pytest.fixture
 def json_path():
@@ -41,7 +42,7 @@ def raw_combined_json_report(json_path):
 
         return combined_json
     except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}") from exc
 
 
 @pytest.fixture
@@ -55,27 +56,21 @@ def sample_combined_json_report(json_path):
         for step in combined_json["execution_steps"]:
             start_as_datetime = datetime.fromisoformat(step["StartTime"])
             step["StartTimeAsDatetime"] = start_as_datetime
-            step["StartTimeShort"] = datetime.strftime(
-                start_as_datetime, "%d/%m/%Y %H:%M:%S"
-            )
+            step["StartTimeShort"] = datetime.strftime(start_as_datetime, "%d/%m/%Y %H:%M:%S")
             end_as_datetime = datetime.fromisoformat(step["EndTime"])
             step["EndTimeAsDatetime"] = end_as_datetime
-            step["EndTimeShort"] = datetime.strftime(
-                end_as_datetime, "%d/%m/%Y %H:%M:%S"
-            )
+            step["EndTimeShort"] = datetime.strftime(end_as_datetime, "%d/%m/%Y %H:%M:%S")
 
         return combined_json
     except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}") from exc
 
 
 @pytest.fixture
 def json_report_with_fillers():
     combined_report = {
         "definition": {"error_message": "Could not read pipeline definitions"},
-        "execution_definition": {
-            "error_message": "Could not read execution definition"
-        },
+        "execution_definition": {"error_message": "Could not read execution definition"},
         "execution_steps": [{"error_message": "Could not read execution steps"}],
         "lineage": [{"error_message": "Could not read lineage"}],
         "evaluation": {"error_message": "Could not read evaluation report"},
@@ -118,7 +113,7 @@ def wrong_date_json_report(json_path):
 
         return combined_json
     except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}") from exc
 
 
 @pytest.fixture
@@ -137,7 +132,7 @@ def steps_table_one_step_json_report(json_path, report_generator):
 
         return report_generator._enhance_json(combined_json)
     except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}") from exc
 
 
 @pytest.fixture
@@ -156,7 +151,7 @@ def steps_table_two_steps_json_report(json_path, report_generator):
 
         return report_generator._enhance_json(combined_json)
     except FileNotFoundError as exc:
-        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}")
+        raise ValueError(f"Could not load data from file {filepath} - reason: {exc}") from exc
 
 
 @pytest.fixture
@@ -213,7 +208,7 @@ def test_create_combined_json_report(json_report_with_fillers):
         pipeline=None,
         execution=None,
         eval_file_uri="s3:wrong_path",
-        execution_parameters=None
+        execution_parameters=None,
     )
 
     json_dict = PipelineExecutionReport().create_combined_json_report(report_context)
@@ -229,19 +224,15 @@ def test_create_combined_json_report(json_report_with_fillers):
         "evaluation",
     ]:
         section = (
-            json_dict[section_name][0]
-            if section_name in ["execution_steps", "lineage"]
-            else json_dict[section_name]
+            json_dict[section_name][0] if section_name in ["execution_steps", "lineage"] else json_dict[section_name]
         )
         reference = json_report_with_fillers[section_name]
         expected_error_message = (
-            reference[0]["error_message"]
-            if section_name in ["execution_steps", "lineage"]
-            else reference["error_message"]
+            reference[0][error_key] if section_name in ["execution_steps", "lineage"] else reference["error_message"]
         )
 
-        assert "error_message" in section
-        assert section["error_message"] == expected_error_message
+        assert error_key in section
+        assert section[error_key] == expected_error_message
         assert "error_reason" in section
         assert "An exception of type" in section["error_reason"]
         assert "Arguments" in section["error_reason"]
@@ -251,25 +242,21 @@ def test_create_combined_json_report(json_report_with_fillers):
 
 # @pytest.mark.xfail
 def test_create_markdown_report(sample_combined_json_report):
-    md_report = PipelineExecutionReport().create_markdown_report(
-        sample_combined_json_report
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     status_content = "| PipelineExecutionStatus | Succeeded |"
     assert status_content in md_report
 
 
 # @pytest.mark.xfail
-def test_generate_report_from_combined_json(
-    sample_combined_json_report, report_generator
-):
+def test_generate_report_from_combined_json(sample_combined_json_report, report_generator):
 
     with tempfile.TemporaryDirectory() as tmpdirname:
         report_settings = PipelineExecutionReportSettings()
         report_settings.report_folder = tmpdirname
-        md_report = PipelineExecutionReport(
-            settings=report_settings
-        ).generate_report_from_combined_json(sample_combined_json_report)
+        PipelineExecutionReport(settings=report_settings).generate_report_from_combined_json(
+            sample_combined_json_report
+        )
 
         json_filename = os.path.join(tmpdirname, "pipeline_execution_report.json")
         assert os.path.exists(json_filename)
@@ -282,16 +269,15 @@ def test_generate_report_from_combined_json(
 
         with open(md_filename, "r") as test_file:
             lines = test_file.readlines()
-        assert "| PipelineExecutionStatus | Succeeded |" in lines[8]
+        assert "| PipelineExecutionStatus | Succeeded |" in lines[10]
+
 
 ####
 # resilience
 
 # @pytest.mark.xfail
 def test_create_markdown_report_with_fillers(json_report_with_fillers):
-    md_report = PipelineExecutionReport().create_markdown_report(
-        json_report_with_fillers
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(json_report_with_fillers)
 
     # not included so far
     # assert "Could not read pipeline definitions" in md_report
@@ -331,15 +317,10 @@ def test_template_not_found(sample_combined_json_report):
 
     report_settings = PipelineExecutionReportSettings()
     report_settings.markdown_template_filename = "does_not_exist.md"
-    md_report = PipelineExecutionReport(
-        settings=report_settings
-    ).create_markdown_report(multiclass_json_report)
+    md_report = PipelineExecutionReport(settings=report_settings).create_markdown_report(multiclass_json_report)
     print(md_report)
 
-    assert (
-        "Could not generate report - Reason: err=TemplateNotFound('does_not_exist.md')"
-        in md_report
-    )
+    assert "Could not generate report - Reason: err=TemplateNotFound('does_not_exist.md')" in md_report
 
 
 ####
@@ -364,7 +345,9 @@ def test_show_step_failure(failed_a_step_json_report):
     print(md_report)
 
     execution_steps = failed_a_step_json_report["execution_steps"]
-    assert execution_steps[0]["FailureReason"] in md_report
+    # line feeds are stripped out so that they do not break the table
+    expected_message = execution_steps[0]["FailureReason"].replace("\n", " ").replace("'", "&#39;")
+    assert expected_message in md_report
 
 
 # @pytest.mark.xfail
@@ -373,7 +356,7 @@ def test_no_eval_provided_is_not_failure(failed_a_step_json_report):
     md_report = report_generator.create_markdown_report(failed_a_step_json_report)
 
     print(md_report)
-    
+
     assert "No evaluation file provided" in md_report
 
 
@@ -392,68 +375,47 @@ def test_table_summary_formatting(sample_combined_json_report):
     assert execution_definition["PipelineExecutionDisplayName"] in md_report
     assert execution_definition["PipelineExecutionStatus"] in md_report
     assert execution_definition["PipelineExecutionDescription"] in md_report
-    assert (
-        execution_definition["PipelineExperimentConfig"]["ExperimentName"] in md_report
-    )
+    assert execution_definition["PipelineExperimentConfig"]["ExperimentName"] in md_report
     assert execution_definition["PipelineExperimentConfig"]["TrialName"] in md_report
     assert execution_definition["LastModifiedBy"]["UserProfileName"] in md_report
 
 
 # @pytest.mark.xfail
-def test_table_steps_formatting(
-    steps_table_one_step_json_report, steps_table_two_steps_json_report
-):
+def test_table_steps_formatting(steps_table_one_step_json_report, steps_table_two_steps_json_report):
     # ensure table lines are have correct line split and no extra lines
     report_generator = PipelineExecutionReport()
-    md_report_1 = report_generator.create_markdown_report(
-        steps_table_one_step_json_report
-    )
-    md_report_2 = report_generator.create_markdown_report(
-        steps_table_two_steps_json_report
-    )
+    md_report_1 = report_generator.create_markdown_report(steps_table_one_step_json_report)
+    md_report_2 = report_generator.create_markdown_report(steps_table_two_steps_json_report)
 
     print(md_report_1)
     print(md_report_2)
 
     assert md_report_2.count("\n") == md_report_1.count("\n") + 1
 
-    assert (
-        "| AbaloneTrain | 02/12/2022 21:08:23 | 02/12/2022 21:09:45 | Succeeded |"
-        in md_report_1
-    )
+    assert "| AbaloneTrain | 02/12/2022 21:08:23 | 02/12/2022 21:09:45 | Succeeded |" in md_report_1
 
 
 # @pytest.mark.xfail
-def test_table_lineage_formatting(
-    lineage_table_one_line_json_report, lineage_table_two_lines_json_report
-):
+def test_table_lineage_formatting(lineage_table_one_line_json_report, lineage_table_two_lines_json_report):
     # ensure table lines are have correct line split and no extra lines
     report_generator = PipelineExecutionReport()
-    md_report_1 = report_generator.create_markdown_report(
-        lineage_table_one_line_json_report
-    )
-    md_report_2 = report_generator.create_markdown_report(
-        lineage_table_two_lines_json_report
-    )
+    md_report_1 = report_generator.create_markdown_report(lineage_table_one_line_json_report)
+    md_report_2 = report_generator.create_markdown_report(lineage_table_two_lines_json_report)
 
     print(md_report_1)
     print(md_report_2)
 
     assert md_report_2.count("\n") == md_report_1.count("\n") + 1
 
-    l = "| s3://...022-12-02-21-04-06-122/output/validation | Input | DataSet | ContributedTo | artifact |"
-    assert l in md_report_1
+    line = "| s3://...022-12-02-21-04-06-122/output/validation | Input | DataSet | ContributedTo | artifact |"
+    assert line in md_report_1
 
 
 # @pytest.mark.xfail
-def test_table_metrics_formatting(
-    regression_one_metric_json_report, regression_json_report
-):
+def test_table_metrics_formatting(regression_one_metric_json_report, regression_json_report):
     # ensure table lines are have correct line split and no extra lines
     report_generator = PipelineExecutionReport()
-    md_report_1 = report_generator.create_markdown_report(
-        regression_one_metric_json_report
-    )
+    md_report_1 = report_generator.create_markdown_report(regression_one_metric_json_report)
     md_report_2 = report_generator.create_markdown_report(regression_json_report)
 
     print(md_report_1)
@@ -465,11 +427,15 @@ def test_table_metrics_formatting(
 
 
 @pytest.mark.xfail
+def test_table_parameters_formatting(failed_a_step_json_report, regression_json_report):
+    # ensure table lines are have correct line split and no extra lines
+    pass  # TODO
+
+    
+@pytest.mark.xfail
 def test_long_uri_formatting(sample_combined_json_report):
     # avoid truncated s3 uris
-    md_report = PipelineExecutionReport().create_markdown_report(
-        sample_combined_json_report
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     print(md_report)
 
@@ -482,39 +448,35 @@ def test_long_uri_formatting(sample_combined_json_report):
 # @pytest.mark.xfail
 def test_no_parameters_formatting(definition_parameters_json_report):
     # no parameters provided - show only default
-    md_report = PipelineExecutionReport().create_markdown_report(
-        definition_parameters_json_report
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(definition_parameters_json_report)
 
     print(md_report)
 
     assert "| ModelApprovalStatus | String | PendingManualApproval |  |" in md_report
+
 
 # @pytest.mark.xfail
 def test_default_parameters_formatting(default_parameters_json_report):
     # a parameters section is empty - show is running with default
-    md_report = PipelineExecutionReport().create_markdown_report(
-        default_parameters_json_report
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(default_parameters_json_report)
 
     print(md_report)
 
     assert "| ModelApprovalStatus | String | PendingManualApproval |  |" in md_report
 
+
 # @pytest.mark.xfail
 def test_custom_parameters_formatting(mixed_parameters_json_report):
     # a parameters section is empty - show is runnning with default and custom
-    md_report = PipelineExecutionReport().create_markdown_report(
-        mixed_parameters_json_report
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(mixed_parameters_json_report)
 
     print(md_report)
 
     assert "| ModelApprovalStatus | String | PendingManualApproval | Approval |" in md_report
-    
-    
+
+
 # TODO test the combined json for new items
-# TODO test the report for rendering after summary 
+# TODO test the report for rendering after summary
 
 #    assert "Report type: multiclass_classification_metrics" in md_report
 #    assert "Confusion matrix" in md_report
@@ -542,15 +504,11 @@ def test_enhance_date(raw_combined_json_report):
 # @pytest.mark.xfail
 def test_date_formatting(sample_combined_json_report):
     # shorten date format
-    md_report = PipelineExecutionReport().create_markdown_report(
-        sample_combined_json_report
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(sample_combined_json_report)
 
     print(md_report)
 
-    step_content = (
-        "| AbaloneProcess | 02/12/2022 21:04:09 | 02/12/2022 21:08:10 | Succeeded |"
-    )
+    step_content = "| AbaloneProcess | 02/12/2022 21:04:09 | 02/12/2022 21:08:10 | Succeeded |"
     assert step_content in md_report
 
 
@@ -573,9 +531,7 @@ def test_regression_formatting(regression_json_report):
 # @pytest.mark.xfail
 def test_binary_classification_formatting(binary_classification_json_report):
     # sample source: https://docs.aws.amazon.com/sagemaker/latest/dg/model-monitor-model-quality-metrics.html
-    md_report = PipelineExecutionReport().create_markdown_report(
-        binary_classification_json_report
-    )
+    md_report = PipelineExecutionReport().create_markdown_report(binary_classification_json_report)
 
     print(md_report)
 

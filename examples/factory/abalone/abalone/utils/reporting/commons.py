@@ -1,24 +1,21 @@
-"""This module contains helper functions to create reports.
-"""
+"""This module contains helper functions to create reports."""
 import json
 import logging
+from typing import Any, Dict, NewType
+
+ReportContent = NewType("ReportContent", Dict[str, Any])
+MarkDownContent = NewType("MarkDownContent", str)
 
 
 class BaseReport:
     """This class is an abstract class used as a base class for other reports."""
 
-    def __init__(self):
-        # instance variable unique to each instance
-        # self.name = name
-
-        # initializations
+    def __init__(self) -> None:
+        """Initialize a report instance."""
         pass
 
-    def generate_report(self):
-        pass
-
-    def write_json_report(self, filepath: str, json_report: dict) -> None:
-        """Writes down the dict onto the local file system.
+    def write_json_report(self, filepath: str, json_report: ReportContent) -> None:
+        """Write down the dict onto the local file system.
 
         Parameters
         ----------
@@ -32,14 +29,17 @@ class BaseReport:
             json.dump(json_report, f, default=str)
 
     def load_json_report(self, filepath: str) -> dict:
-        """Loads the JSON report into a dict.
+        """Load the JSON report into a dict.
 
         Parameters
         ----------
         filepath: str
             The name of the file to be loaded.
-        json_report: dict
-            The associative array created by create_combined_json_report.
+
+        Raises
+        ------
+        ValueError
+            if could not load the file.
 
         Returns
         -------
@@ -52,12 +52,10 @@ class BaseReport:
                 data = json.load(json_data)
             return data
         except FileNotFoundError as exc:
-            raise ValueError(
-                f"Could not load data from file {filepath} - reason: {exc}"
-            )
+            raise ValueError(f"Could not load data from file {filepath} - reason: {exc}") from exc
 
-    def write_markdown_report(self, filepath: str, content: str) -> None:
-        """Writes down the Markdown content onto the local file system.
+    def write_markdown_report(self, filepath: str, content: MarkDownContent) -> None:
+        """Write down the Markdown content onto the local file system.
 
         Parameters
         ----------
