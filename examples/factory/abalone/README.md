@@ -46,24 +46,21 @@ This project leverages on the following resources:
 
 ### Devops and code quality tools that must installed on the workspace
 
-- nox
-- black
-- isort
-- venv
+- [nox](https://nox.thea.codes/en/stable/index.html#): build tool
+- [black](https://black.readthedocs.io/en/stable/): formatter
+- [isort](https://pycqa.github.io/isort/): import sorter
+- [venv](https://docs.python.org/3/library/venv.html): virtual environment manager
 
 ### Code quality tools used in the build process and installed by nox
 
-- venv
-- flake8
-- pytest
-- mypy
-- [pytype](https://github.com/google/pytype)
-- sphinx
-- [pymarkdownmnt](https://pypi.org/project/pymarkdownlnt/)
+- [flake8](https://flake8.pycqa.org/en/latest/index.html#quickstart): linter
+- [pytest](https://docs.pytest.org/en/latest/index.html): unit test runner
+- [mypy](https://mypy.readthedocs.io/en/stable/getting_started.html): type checker
+- [pytype](https://github.com/google/pytype): type checker
+- [sphinx](https://www.sphinx-doc.org/en/master/): documentation generator
+- [pymarkdownmnt](https://pypi.org/project/pymarkdownlnt/): markdown linter
 
-TODO links and description from the module
-
-Thanks to the maintainers and contributors of these modules.
+Thanks to maintainers and contributors of these modules.
 
 ## Examples of project outputs  
 
