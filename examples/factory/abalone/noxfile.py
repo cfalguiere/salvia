@@ -120,7 +120,14 @@ def mypy(session):
     session.install("mypy")
     # session.run("pip", "install", "--quiet", "-r", "requirements.txt")
     session.install("--quiet", "-e", ".")
-    session.run("mypy", "--config-file", ".mypy.ini", "--python-version", PYTHON_VERSION, "abalone")
+    session.run("mypy", 
+                "--install-types", 
+                "--non-interactive", 
+                "--config-file", 
+                ".mypy.ini", 
+                "--python-version", 
+                PYTHON_VERSION, 
+                "abalone")
     # removed tests from the target folders as changing rules does not work
 
 

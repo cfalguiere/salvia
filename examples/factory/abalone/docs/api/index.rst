@@ -1,5 +1,5 @@
-This project
-================================
+Salvia - reporting
+==================
 
 TODO description
 TODO settings and context
@@ -10,14 +10,14 @@ TODO settings and context
    :maxdepth: 1
 
 PipelineExecutionReport
------
+-----------------------
 
-.. automodule:: abalone.utils.reporting.pipeline_execution_report.PipelineExecutionReport
+.. automodule:: abalone.utils.reporting.pipeline_execution_report
   :members:
 
 BaseReport
-------------
+----------
 
-.. automodule:: abalone.utils.reporting.commons.BaseReport
+.. automodule:: abalone.utils.reporting.commons
    :members:
 
