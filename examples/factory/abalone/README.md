@@ -57,7 +57,7 @@ This project leverages on the following resources:
 - flake8
 - pytest
 - mypy
-- pytype
+- [pytype](https://github.com/google/pytype)
 - sphinx
 - [pymarkdownmnt](https://pypi.org/project/pymarkdownlnt/)
 
