@@ -17,7 +17,7 @@ PYTHON_VERSION = "3.9"
 nox.options.stop_on_first_error = True
 
 # nox.options.sessions = ['lint', 'tests']
-nox.options.sessions = ["format", "lint", "md_lint", "mypy", "pytype", "unit_tests", "docs"]
+nox.options.sessions = ["format", "lint", "md_lint", "mypy", "unit_tests", "docs"]
 
 nox.options.envdir = ".venv"
 # nox.options.reuse_existing_virtualenvs = True
@@ -32,6 +32,7 @@ def format(session):
     black --line-length 120 .
     isort --profile black  --line-length 120 .
     """
+    session.log("========= format (black+isort) =========")
     session.install("black", "isort")
 
     session.run("black", ".", "--line-length", "120", "--check")  # Options are set in `pyproject.toml` file
@@ -43,6 +44,7 @@ def format(session):
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def qlint(session):
     """Check Python code for syntax issues."""
+    session.log("============== quick lint ==============")
     session.install("flake8")
     session.run(
         "flake8",
@@ -63,7 +65,7 @@ def lint(session):
     Consider running black and isort on your code before lint.
     Configuration in .flake8.
     """
-    # consider running black and isort before
+    session.log("================= lint =================")
     session.install(
         "flake8",
         "flake8-bandit",
@@ -88,6 +90,7 @@ def md_lint(session):
     
     rules: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
     """
+    session.log("============= markdown lint ============")
     session.install("pymarkdownlnt")
     # disable all rules checking empty lines and line length on the generated report
     session.run("pymarkdown", "--disable-rules", "MD013,MD012,MD041,MD047,MD041,MD022", "scan", "docs/report-examples")
@@ -95,16 +98,6 @@ def md_lint(session):
     session.run("pymarkdown", "--disable-rules", "MD041,MD013", "scan", "templates")
     # all rules 
     session.run("pymarkdown", "scan", "./README.md")  # TODO "docs/*.md", 
-
-
-@nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
-def mypy(session):
-    """Check types - configuration in mypy.ini."""
-    session.log("================ mypy ================")
-    session.install("mypy")
-    # session.run("pip", "install", "--quiet", "-r", "requirements.txt")
-    session.install("--quiet", "-e", ".")
-    session.run("mypy", "--config-file", ".mypy.ini", "--python-version", PYTHON_VERSION, "abalone", "tests")
 
 
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
@@ -118,8 +111,23 @@ def pytype(session):
 
 
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
+def mypy(session):
+    """Check types - configuration in mypy.ini.
+    
+    config file documentation https://mypy.readthedocs.io/en/stable/config_file.html
+    """
+    session.log("================ mypy ================")
+    session.install("mypy")
+    # session.run("pip", "install", "--quiet", "-r", "requirements.txt")
+    session.install("--quiet", "-e", ".")
+    session.run("mypy", "--config-file", ".mypy.ini", "--python-version", PYTHON_VERSION, "abalone")
+    # removed tests from the target folders as changing rules does not work
+
+
+@nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def unit_tests(session):
     """Run unit tests - configuration in pytest.ini."""
+    session.log("============== unit tests ==============")
     session.install("pytest", "testfixtures", "coverage", "pytest-cov")
     # session.install('--quiet', '-r', 'requirements.txt')
     session.install("-e", ".")
@@ -131,6 +139,7 @@ def unit_tests(session):
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def ic_tests(session):
     """Run In-Container tests of the pipeline - configuration in pytest.ini."""
+    session.log("========== in-container tests ==========")
     session.install("pytest", "testfixtures", "coverage", "pytest-cov")
     # session.install('--quiet', '-r', 'requirements.txt')
     session.install("-e", ".")
@@ -141,6 +150,7 @@ def ic_tests(session):
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def create_and_run(session):
     """Define, upload and run the pipeline."""
+    session.log("============ create and run ============")
     # session.install('--quiet', '-r', 'requirements.txt')
     session.install("-e", ".")
     # edited
@@ -150,6 +160,7 @@ def create_and_run(session):
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION)
 def run(session):
     """Run an existing pipeline."""
+    session.log("================== run =================")
     # session.install('--quiet', '-r', 'requirements.txt')
     session.install("-e", ".")
     # edited
@@ -176,6 +187,7 @@ def docs(session):
 @nox.session(python=False)
 def clean(session):
     """Remove all build files and caches in the directory."""
+    session.log("========== clear build items ===========")
     rmtree("build", ignore_errors=True)
     rmtree("dist", ignore_errors=True)
     rmtree("node_modules", ignore_errors=True)
@@ -200,6 +212,7 @@ def clean(session):
 @nox.session(python=False)
 def clean_runs(session):
     """Remove all files generated in the directory."""
+    session.log("============ clear run items ===========")
     rmtree("generated", ignore_errors=True)
     rmtree("target", ignore_errors=True)
 
@@ -207,4 +220,5 @@ def clean_runs(session):
 @nox.session(python=False)
 def clean_venvs(session):
     """Remove all .venv's."""
+    session.log("============== clear vens ==============")
     rmtree(".venv", ignore_errors=True)

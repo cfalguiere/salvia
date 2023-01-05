@@ -12,7 +12,7 @@ import xgboost
 from sklearn.metrics import mean_squared_error
 
 
-def evaluation(base_dir):
+def evaluation(base_dir: str) -> None:
     """Do the model evaluation.
 
     Data are passed by the step's channels (Input and Output).

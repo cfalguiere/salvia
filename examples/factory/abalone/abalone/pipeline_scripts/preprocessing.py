@@ -1,4 +1,5 @@
 """This module contains the preprocessing script used by the pipeline."""
+from typing import Any, Dict
 
 import numpy as np
 import pandas as pd
@@ -33,13 +34,13 @@ feature_columns_dtype = {
 label_column_dtype = {"rings": np.float64}
 
 
-def _merge_two_dicts(x, y):
+def _merge_two_dicts(x: Dict[str, Any], y: Dict[str, Any]) -> Dict[str, Any]:
     z = x.copy()
     z.update(y)
     return z
 
 
-def preprocess(base_dir):
+def preprocess(base_dir: str) -> None:
     """Do the data preprocessing.
 
     Data are passed by the step's channels (Input and Output).
@@ -103,3 +104,4 @@ if __name__ == "__main__":
 
     base_dir = "/opt/ml/processing"
     preprocess(base_dir)
+    # TODO manage retuen code and exit(rc)

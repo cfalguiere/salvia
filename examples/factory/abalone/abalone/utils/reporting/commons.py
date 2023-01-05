@@ -1,10 +1,11 @@
 """This module contains helper functions to create reports."""
 import json
 import logging
-from typing import Any, Dict, NewType
+from typing import Any, Dict
 
-ReportContent = NewType("ReportContent", Dict[str, Any])
-MarkDownContent = NewType("MarkDownContent", str)
+# Tyep alias
+ReportContent = Dict[str, Any]
+MarkDownContent = str
 
 
 class BaseReport:
@@ -28,7 +29,7 @@ class BaseReport:
         with open(filepath, "w") as f:
             json.dump(json_report, f, default=str)
 
-    def load_json_report(self, filepath: str) -> dict:
+    def load_json_report(self, filepath: str) -> ReportContent:
         """Load the JSON report into a dict.
 
         Parameters
@@ -66,4 +67,4 @@ class BaseReport:
         """
         logging.info(f"writing markdown report file to {filepath}")
         with open(filepath, mode="w", encoding="utf-8") as report:
-            report.write(content)
+            report.write(str(content))

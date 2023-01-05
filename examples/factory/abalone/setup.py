@@ -12,7 +12,7 @@ with open("README.md", "r") as f:
     readme = f.read()
 
 
-required_packages = ["sagemaker==2.121.0", "Jinja2", "requests", "scikit-learn"]
+required_packages = ["sagemaker==2.121.0", "Jinja2", "requests", "scikit-learn", "pandas", "xgboost"]
 
 setuptools.setup(
     name=about["__title__"],
