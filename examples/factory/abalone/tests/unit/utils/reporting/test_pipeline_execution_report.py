@@ -431,7 +431,7 @@ def test_table_parameters_formatting(failed_a_step_json_report, regression_json_
     # ensure table lines are have correct line split and no extra lines
     pass  # TODO
 
-    
+
 @pytest.mark.xfail
 def test_long_uri_formatting(sample_combined_json_report):
     # avoid truncated s3 uris
