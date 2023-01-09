@@ -1,10 +1,12 @@
 """This module contains helper functions to create reports."""
 import json
 import logging
-from typing import Any, Dict
+from typing import Any
 
 # Tyep alias
-ReportContent = Dict[str, Any]
+ReportContent = dict[str, Any]
+JSONDoc = dict[str, Any]
+ListOfJSONDocs = list[dict[str, Any]]
 MarkDownContent = str
 
 
@@ -51,7 +53,7 @@ class BaseReport:
         try:
             with open(filepath) as json_data:
                 data = json.load(json_data)
-            return data
+            return ReportContent(data)
         except FileNotFoundError as exc:
             raise ValueError(f"Could not load data from file {filepath} - reason: {exc}") from exc
 

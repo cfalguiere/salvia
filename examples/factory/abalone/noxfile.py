@@ -134,13 +134,23 @@ def mypy(session):
 
 
 @nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION, tags=["qcheck"])
+def qtests(session):
+    """Quick run unit tests - configuration in pytest.ini."""
+    session.log("============= quick tests ==============")
+    session.install("pytest", "testfixtures")
+    # session.install('--quiet', '-r', 'requirements.txt')
+    session.install("-e", ".")
+    session.run("pytest", "tests/unit", "-m", "pipeline")  # change markers when required
+
+
+@nox.session(venv_backend=VENV_BACKEND, python=PYTHON_VERSION, tags=["qcheck"])
 def unit_tests(session):
     """Run unit tests - configuration in pytest.ini."""
     session.log("============== unit tests ==============")
     session.install("pytest", "testfixtures", "coverage", "pytest-cov")
     # session.install('--quiet', '-r', 'requirements.txt')
     session.install("-e", ".")
-    session.run("pytest", "--cov-report", "term", "--cov=abalone", "tests/unit")
+    session.run("pytest", "--cov-report", "term", "--cov=abalone", "-m", "not in_container", "tests/unit")
     # TODO tags to select only tests/unit
     # TODO markers     session.run('pytest', '-m', 'fanout')
 
@@ -152,6 +162,7 @@ def ic_tests(session):
     session.install("pytest", "testfixtures", "coverage", "pytest-cov")
     # session.install('--quiet', '-r', 'requirements.txt')
     session.install("-e", ".")
+    session.run("pytest", "-m", "in_container", "tests/unit")
     session.run("pytest", "tests/in-container")
     # TODO gather all tests to compute coverage correctly
 
