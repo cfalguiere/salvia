@@ -1,0 +1,18 @@
+{
+    "definition": {"error_message": "dummy"},
+    "execution_definition": {"error_message": "dummy"},
+    "execution_steps": [
+        {"StepName": "AbaloneTrain", 
+         "StartTime": "2022-12-02 21:08:23.183000+00:00", 
+         "EndTime": "2022-12-02 21:09:45.110000+00:00", 
+         "StepStatus": "Succeeded", 
+         "AttemptCount": 0}, 
+        {"StepName": "AbaloneEval", 
+         "StartTime": "2022-12-02 21:10:52.195000+00:00", 
+         "EndTime": "2022-12-02 21:14:47.142000+00:00", 
+         "StepStatus": "Succeeded", 
+         "AttemptCount": 0}
+    ],
+    "lineage": [{"error_message": "dummy"}],
+    "evaluation": {"error_message": "dummy"}
+}

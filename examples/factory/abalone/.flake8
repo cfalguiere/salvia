@@ -1,0 +1,30 @@
+# .flake8
+[flake8]
+# level 1
+#select = C,E,F,I,S,W
+# level 2
+#select = ANN,B,BLK,C,E,F,I,S,W,N8
+# level 3
+select = ANN,B,B9,BLK,C,D,DAR,E,F,I,S,W,N8
+# ANN: Annotations
+# B, BLK: Black formatter
+# D: Docstring
+# DAR: DargLint #Validating docstrings against function signatures
+#W,E112,E113,F,C9,N8'
+#'--ignore=E501,I202,F401,F841',
+ignore = S311
+# S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+
+max-line-length = 120
+
+per-file-ignores =
+  # relax type annotations and Docstrings for tests
+  # relax warning on assert in tests as assert is a pytest keyword
+  tests/*:S101,ANN,D
+  # relax warning E501 about the line length for reports
+  tests/unit/utils/reporting/test_pipeline_execution_report.py:S101,ANN,D,E501
+
+  # relax type annotations for noxfile
+  # relax warning W503 on clean command builders - FIXME
+  noxfile.py:ANN,DAR,W503
+ 

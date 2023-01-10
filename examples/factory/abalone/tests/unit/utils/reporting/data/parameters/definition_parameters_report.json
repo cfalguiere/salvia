@@ -1,0 +1,44 @@
+{"definition": 
+ {"Version": "2020-12-01", 
+  "Metadata": {}, 
+  "Parameters": [
+      {"Name": "ProcessingInstanceCount", 
+       "Type": "Integer", 
+       "DefaultValue": 1}, 
+      {"Name": "TrainingInstanceType", 
+       "Type": "String", 
+       "DefaultValue": 
+       "ml.m5.xlarge"
+      }, 
+      {"Name": "ModelApprovalStatus", "Type": "String", "DefaultValue": "PendingManualApproval"}, 
+      {"Name": "InputData", 
+       "Type": "String", 
+       "DefaultValue": "s3://sagemaker-eu-west-1-999999999999/abalone/abalone-dataset.csv"}, 
+      {"Name": "BatchData", "Type": "String", "DefaultValue": "s3://sagemaker-eu-west-1-999999999999/abalone/abalone-dataset-batch"}, 
+      {"Name": "MseThreshold", "Type": "Float", "DefaultValue": 6.0}
+  ], 
+  "PipelineExperimentConfig": 
+  {"ExperimentName": 
+   {"Get": "Execution.PipelineName"}, 
+   "TrialName": 
+   {"Get": "Execution.PipelineExecutionId"}}, 
+  "Steps": []
+ }, 
+ 
+ "execution_definition": {
+     "PipelineArn": "arn:aws:sagemaker:eu-west-1:999999999999:pipeline/abalonemlops2pipeline", 
+     "PipelineExecutionArn": "arn:aws:sagemaker:eu-west-1:999999999999:pipeline/abalonemlops2pipeline/execution/92jx5a0miarz", 
+     "PipelineExecutionDisplayName": "DEV-20221202-210408", 
+     "PipelineExecutionStatus": "Succeeded", 
+     "PipelineExecutionDescription": "DEV with defaults", 
+     "PipelineExperimentConfig": {"ExperimentName": "abalonemlops2pipeline", 
+                                   "TrialName": "92jx5a0miarz"}, 
+     "CreationTime": "2022-12-02 21:04:08.207000+00:00", 
+     "LastModifiedTime": "2022-12-02 21:19:12.007000+00:00", 
+     "CreatedBy": {"UserProfileName": "clili"}, 
+     "LastModifiedBy": { "UserProfileName": "ulili" }
+  }, 
+ "execution_steps": [{"error_message": "dummy"}],
+ "lineage": [{"error_message": "dummy"}],
+ "evaluation": {"error_message": "dummy"}
+}

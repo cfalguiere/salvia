@@ -1,0 +1,16 @@
+{
+    "definition": {"error_message": "dummy"},
+    "execution_definition": {"error_message": "dummy"},
+    "execution_steps": [{"error_message": "dummy"}],
+    "lineage": [
+        {"stepname": "AbaloneTrain", "items": [
+            {"Name/Source": "s3://...022-12-02-21-04-06-122/output/validation", 
+             "Direction": "Input", 
+             "Type": "DataSet", 
+             "Association Type": "ContributedTo", 
+             "Lineage Type": "artifact"}
+        ]}
+    ],     
+    "evaluation": {"error_message": "dummy"}
+}
+

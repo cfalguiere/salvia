@@ -1,0 +1,63 @@
+import pytest
+
+import tempfile
+import os
+import shutil
+
+# Module under test
+from abalone.pipeline_scripts.evaluation import evaluation
+
+
+@pytest.fixture
+def sample_model_filename():
+    return "tests/unit/pipeline_scripts/data/model.tar.gz"
+
+
+@pytest.fixture
+def sample_model_filename():
+    return "tests/unit/pipeline_scripts/data/test"
+
+
+@pytest.mark.xfail
+def test_preprocess(sample_model_filename):
+    
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        # copy sample file to sub folder input
+        model_dir = os.path.join(tmpdirname, "model")
+        os.makedirs(input_dir)
+   
+        shutil.copy(sample_model_filename, model_dir)
+    
+        # copy sample file to sub folder input
+        test_dir = os.path.join(tmpdirname, "test")
+        os.makedirs(test_dir)
+   
+        test_filename = os.path.join(tmpdirname, "test", "test.csv")
+        shutil.copyfile(sample_test_filename, os.path.join(test_dir, "abalone-dataset-batch"))
+    
+        # ensure output folders are there. 
+        # Channel will create the folders when running in processor
+        for folder in ["evaluation"]:
+            os.makedirs(os.path.join(base_dir, folder), exist_ok=True)
+
+        # call the function under test
+        evaluation(tmpdirname)
+
+        # ceck output
+        evaluation_filename = os.path.join(tmpdirname, "evaluation", "evaluation.json")
+        assert os.path.exists(evaluation_filename)
+
+        with open(filepath) as json_data:
+            data = json.load(json_data)
+
+        # ewpecting somethibg like
+        #{
+        #    "regression_metrics": {
+        #        "mse": {"value": mse, "standard_deviation": std},
+        #    },
+        #}
+        assert "regression_metrics" in data
+        assert "mse" in data["regression_metrics"]
+        assert "value" in data["regression_metrics"]["mse"]
+        assert "standard_deviation" in data["regression_metrics"]["mse"]
+        assert data["regression_metrics"]["mse"]["value"] >= 0
