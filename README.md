@@ -28,3 +28,23 @@ TODO presentation
 # Examples of notebooks and projects
 
 [examples](exampless/README.md): examples for differents stages
+
+# Changelog
+
+
+## 0.2.0
+
+Major:
+
+- Project template for factory stage on Abalone
+- Code Quality tools
+- SageMaker Pipeline with one step
+
+## 0.1.0
+
+Major:
+
+- setup of LabBench
+- setup of projects Iris, Abalone and Bank
+
+
