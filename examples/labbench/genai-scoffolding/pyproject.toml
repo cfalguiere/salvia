@@ -1,0 +1,7 @@
+[project]
+name = "Thing"
+version = "1.2.3"
+# ...
+dependencies = [
+    "nox"
+]
