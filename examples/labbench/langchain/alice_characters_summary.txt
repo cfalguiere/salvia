@@ -1,0 +1,629 @@
+{'': {'query': 'Who is ? . Give a funny answer 30 words long.',
+      'result': ' Nobody knows! But if the Caterpillar had a sense of humor, '
+                'he might have said something like: "Alice, you\'re a '
+                "perplexing human! One minute you're tall, the next you're "
+                'small. I\'m not sure what to make of it all!"'},
+ 'Alice': {'query': 'Who is Alice? . Give a funny answer 30 words long.',
+           'result': ' Alice is a brave adventurer who found herself in a '
+                     'magical world full of talking animals, curious '
+                     'creatures, and a Queen who wanted to cut off her head! '
+                     'But Alice held her own and eventually returned home, '
+                     'having had a wild and wonderful dream.'},
+ "Alice's sister": {'query': "Who is Alice's sister? . Give a funny answer 30 "
+                             'words long.',
+                    'result': " Alice's sister is really the Cheshire Cat in "
+                              "disguise! He likes to pretend to be Alice's "
+                              'sister and secretly enjoys taking care of her. '
+                              'He loves listening to her stories and being '
+                              'part of her adventures.'},
+ 'Alice,': {'query': 'Who is Alice,? . Give a funny answer 30 words long.',
+            'result': ' Alice is a brave adventurer who can fight off an army '
+                      'of playing cards, shrink and grow to various sizes, and '
+                      'even converse with a Caterpillar!'},
+ 'Baby': {'query': 'Who is Baby? . Give a funny answer 30 words long.',
+          'result': ' Baby is the little creature Alice catches with some '
+                    'difficulty and takes away with her to prevent it being '
+                    "killed. It's a queer-shaped little thing that grunts in "
+                    "reply to Alice's questions and eventually turns into a "
+                    'pig. Alice is relieved to see it trot away quietly into '
+                    'the wood!'},
+ 'Bill': {'query': 'Who is Bill? . Give a funny answer 30 words long.',
+          'result': ' Bill is a mysterious character that nobody can quite '
+                    'figure out. He seems to appear and disappear at random, '
+                    "often turning up in the strangest places. He's always up "
+                    'for a challenge, however, and is willing to go down the '
+                    'chimney or anywhere else for an adventure.'},
+ 'Bottle': {'query': 'Who is Bottle? . Give a funny answer 30 words long.',
+            'result': ' Bottle is a magical creature who loves to join in on '
+                      "all of Alice's adventures. He is a bit clumsy and often "
+                      'gets into mischief, always requiring Alice to lend a '
+                      'helping hand. Bottle is always ready for an adventure, '
+                      "and his enthusiasm often outshines Alice's!"},
+ 'C': {'query': 'Who is C? . Give a funny answer 30 words long.',
+       'result': ' C is the Caterpillar, who is as grumpy as a hungry '
+                 'caterpillar! He is very insistent that Alice explain herself '
+                 "and is easily angered if she doesn't comply. He also can get "
+                 'quite snippy when Alice questions him about his identity.'},
+ 'Canary': {'query': 'Who is Canary? . Give a funny answer 30 words long.',
+            'result': " I don't know."},
+ 'Caterpillar': {'query': 'Who is Caterpillar? . Give a funny answer 30 words '
+                          'long.',
+                 'result': ' The Caterpillar is an old wise creature that '
+                           'lives on a mushroom and has the ability to change '
+                           'its size. It is always asking difficult questions '
+                           'and giving strange advice that often leaves Alice '
+                           'confused and bewildered. Its favorite pastime is '
+                           'smoking hookah and giving Alice advice that is '
+                           'often as confusing as the smoke it exhales.'},
+ 'Caucus-Race': {'query': 'Who is Caucus-Race? . Give a funny answer 30 words '
+                          'long.',
+                 'result': ' The Caucus-Race is an ancient and mysterious game '
+                           'that is played to get people dry. It involves '
+                           'running in a circle, leaving and joining whenever '
+                           'you want, and awarding prizes at the end to '
+                           'everyone. The only catch is that nobody knows who '
+                           "won - but that's all part of the fun!"},
+ 'Cheshire-Cat': {'query': 'Who is Cheshire-Cat? . Give a funny answer 30 '
+                           'words long.',
+                  'result': ' The Cheshire-Cat is a mysterious entity that '
+                            'appears and disappears at random, leaving behind '
+                            'only a mischievous grin. It is said to have '
+                            'magical powers and the ability to make people '
+                            "smile with its silly antics. It's also known for "
+                            'its love of croquet, which it plays with the '
+                            'Queen and the Duchess.'},
+ 'Cheshire-Cat.': {'query': 'Who is Cheshire-Cat.? . Give a funny answer 30 '
+                            'words long.',
+                   'result': ' The Cheshire-Cat is a magical, mischievous cat '
+                             'who is always grinning, despite its lack of a '
+                             'body! Despite its lack of a body, it can still '
+                             'turn its head and tail any way it pleases, and '
+                             "always has a twinkle in its eye. It's a master "
+                             'of trickery and loves nothing more than to '
+                             'confuse and confound those it meets.'},
+ 'Cheshire-Puss': {'query': 'Who is Cheshire-Puss? . Give a funny answer 30 '
+                            'words long.',
+                   'result': ' Cheshire-Puss is a magical cat who loves to '
+                             'appear in unexpected places and offer advice to '
+                             'confused travelers. He always has a mischievous '
+                             'grin on his face and loves to play croquet with '
+                             "the Queen. He's always up for an adventure!"},
+ 'Cook': {'query': 'Who is Cook? . Give a funny answer 30 words long.',
+          'result': " Cook is the Duchess's chef who is known for her "
+                    "pepper-heavy cooking. She's always adding too much pepper "
+                    'to her dishes, so much so that the people near the door '
+                    'start sneezing. She often has a mischievous grin on her '
+                    "face, likely because she's testing out her latest "
+                    'pepper-filled recipe. To top it off, she even carries a '
+                    'pepper-box around with her!'},
+ 'D': {'query': 'Who is D? . Give a funny answer 30 words long.',
+       'result': ' D is the Dormouse, who is always dozing off at the Mad '
+                 'Tea-Party, missing out on all the riddles and conversations. '
+                 "He's always having hot tea poured on his nose to wake him "
+                 'up!'},
+ 'Dinah': {'query': 'Who is Dinah? . Give a funny answer 30 words long.',
+           'result': " Dinah is Alice's beloved cat who is the best cat in the "
+                     'world! She is so amazing that when she was mentioned, '
+                     'all the birds and animals scattered away in fear!'},
+ 'Dodo': {'query': 'Who is Dodo? . Give a funny answer 30 words long.',
+          'result': ' Dodo is a very wise and helpful creature who is always '
+                    'ready to give advice. Despite its lack of wings, it can '
+                    'often be seen helping Alice and her friends with wise '
+                    'words and funny stories. It is also known to be a great '
+                    'organizer, having managed to put together a race with '
+                    'little to no effort.'},
+ 'Dormouse': {'query': 'Who is Dormouse? . Give a funny answer 30 words long.',
+              'result': ' The Dormouse is an adorable sleepy character who is '
+                        'always nodding off during the Mad Tea-Party. He is so '
+                        "lazy, he can't even open his eyes to talk, instead he "
+                        'just grumbles from his slumber. He is quite forgetful '
+                        'too, often forgetting his own words as he talks in '
+                        'his sleep!'},
+ 'Duchess': {'query': 'Who is Duchess? . Give a funny answer 30 words long.',
+             'result': ' The Duchess is an extraordinary creature who sneezes '
+                       'and howls alternately, and is sentenced to execution '
+                       "for boxing the Queen's ears. She is also apparently "
+                       'fond of playing croquet, though she is no match for '
+                       "the Queen's fiery temper. She is the one who said, "
+                       '"It\'s love, \'tis love that makes the world go '
+                       '\'round!"'},
+ "Duchess's Cook.": {'query': "Who is Duchess's Cook.? . Give a funny answer "
+                              '30 words long.',
+                     'result': " The Duchess's cook is a large cat who seems "
+                               'to always be grinning from ear to ear. Despite '
+                               'the chaos of the kitchen, the cat remains '
+                               'unfazed and continues to smile as if nothing '
+                               'is wrong. Even when Alice asks why the cat is '
+                               "grinning, the Duchess replies that it's a "
+                               'Cheshire-Cat!'},
+ 'Duck': {'query': 'Who is Duck? . Give a funny answer 30 words long.',
+          'result': ' Duck is an interesting character! He may be small, but '
+                    "he is full of personality! He's always asking questions "
+                    'about things and is always curious. He loves to swim and '
+                    'quack, and he loves to make everyone laugh with his funny '
+                    "antics. He's a great friend, and always there when you "
+                    'need him.'},
+ 'Eaglet': {'query': 'Who is Eaglet? . Give a funny answer 30 words long.',
+            'result': ' The Eaglet is a strange creature with a face like a '
+                      'bird and a body like a small elephant. It has a very '
+                      'loud voice and a tendency to become very excited over '
+                      'small things. Its favorite activity is swimming, and it '
+                      'can often be seen leading the way for the party as they '
+                      'try to make it to the shore.'},
+ 'Eaglet.': {'query': 'Who is Eaglet.? . Give a funny answer 30 words long.',
+             'result': ' The Eaglet is a small bird that looks like an eagle, '
+                       'but is much cuter and more adorable. It has fluffy '
+                       'feathers, a tiny beak, and big, round eyes that look '
+                       "like they're always in awe of the world. It loves to "
+                       'soar around in the sky, but is also a bit of a '
+                       'homebody and loves to cuddle up and nap with its '
+                       'family.'},
+ 'Earls of Mercia and Northumbria': {'query': 'Who is Earls of Mercia and '
+                                              'Northumbria? . Give a funny '
+                                              'answer 30 words long.',
+                                     'result': ' The Earls of Mercia and '
+                                               'Northumbria are two very noble '
+                                               'cats who have been appointed '
+                                               'rulers of the kingdom. They '
+                                               'are known for their majestic '
+                                               'purrs and regal stances. They '
+                                               'can often be seen lounging '
+                                               'around the castle, looking '
+                                               'quite regal and demanding '
+                                               'royal treatment.'},
+ 'Edgar Atheling': {'query': 'Who is Edgar Atheling? . Give a funny answer 30 '
+                             'words long.',
+                    'result': ' Edgar Atheling is an adventurous frog with a '
+                              'round face and large eyes who is always getting '
+                              'into trouble. He is known for his daring '
+                              'escapades and is always looking for ways to '
+                              'have fun.'},
+ 'Edwin': {'query': 'Who is Edwin? . Give a funny answer 30 words long.',
+           'result': ' Edwin is a large bird who is always complaining that he '
+                     "can't taste the comfits Alice handed out as prizes. He's "
+                     "always trying to get more, but he's never quite sure "
+                     "what he's getting himself into!"},
+ 'English': {'query': 'Who is English? . Give a funny answer 30 words long.',
+             'result': ' Nobody is English - we all come from a variety of '
+                       'backgrounds and cultures! In fact, if you look '
+                       "closely, you'll find that everyone is a unique mixture "
+                       "of many different identities. That's why we should all "
+                       'celebrate our differences and be proud of who we are!'},
+ 'Fish-Footman': {'query': 'Who is Fish-Footman? . Give a funny answer 30 '
+                           'words long.',
+                  'result': ' The Fish-Footman is a strange creature who looks '
+                            'like a fish and serves as a footman. He has a '
+                            'solemn tone and is quite determined in his job of '
+                            'delivering an invitation from the Queen to the '
+                            'Duchess to play croquet. He even gets so carried '
+                            'away that he and the Frog-Footman get their curls '
+                            'entangled together!'},
+ 'Five': {'query': 'Who is Five? . Give a funny answer 30 words long.',
+          'result': ' Five is a caterpillar who loves to smoke hookah and '
+                    "offer unsolicited advice to Alice. He's always trying to "
+                    "get her to explain herself, but she's not having it!"},
+ 'Flamingo': {'query': 'Who is Flamingo? . Give a funny answer 30 words long.',
+              'result': " Flamingo is Alice's loyal feathery sidekick who "
+                        'helps her on her adventures. He is always ready to '
+                        'lend a helping wing, even if he sometimes gets '
+                        'himself into trouble by flying off to the other side '
+                        'of the garden!'},
+ 'Footman 1': {'query': 'Who is Footman 1? . Give a funny answer 30 words '
+                        'long.',
+               'result': ' Footman 1 is the Fish-Footman! He looks like a '
+                         'fish, with a round face and large eyes like a frog. '
+                         'He came running out of the wood with an invitation '
+                         'for the Duchess to play croquet. He and the '
+                         'Frog-Footman got their curls tangled up when they '
+                         'bowed low together. He was a very loyal and '
+                         'hardworking footman, but he always seemed to be a '
+                         'bit confused!'},
+ 'Footman 2.': {'query': 'Who is Footman 2.? . Give a funny answer 30 words '
+                         'long.',
+                'result': ' Footman 2 is the Frog-Footman. He has a round face '
+                          'and large eyes like a frog, and his curls often get '
+                          "entangled with the Fish-Footman's curls. He is "
+                          'often found sitting on the ground near the door, '
+                          'staring stupidly up at the sky.'},
+ 'Frog-Footman': {'query': 'Who is Frog-Footman? . Give a funny answer 30 '
+                           'words long.',
+                  'result': ' The Frog-Footman is an anthropomorphic amphibian '
+                            'servant who is a loyal subject of the Queen of '
+                            'Wonderland. He is known for his solemn demeanor '
+                            'and his tendency to get his curls entangled with '
+                            'the Fish-Footman. He is also known for his round '
+                            'face and large eyes, which make him look like a '
+                            'frog. He is an expert in protocol and is often '
+                            'tasked with delivering important messages to the '
+                            'Duchess.'},
+ 'Hatter': {'query': 'Who is Hatter? . Give a funny answer 30 words long.',
+            'result': ' The Hatter is a mad character from the story "Alice\'s '
+                      'Adventures in Wonderland". He is known for his strange '
+                      'and funny behavior such as asking riddles with no '
+                      'answer and trying to put a Dormouse into a teapot. He '
+                      'is also known for saying silly things like "Why is a '
+                      'raven like a writing-desk?".'},
+ 'Hedgehog': {'query': 'Who is Hedgehog? . Give a funny answer 30 words long.',
+              'result': " I'm sorry, I don't know who Hedgehog is."},
+ 'Herald.': {'query': 'Who is Herald.? . Give a funny answer 30 words long.',
+             'result': ' Herald is the footman with the round face and large '
+                       'eyes like a frog who rapped on the door. He is the '
+                       'official announcer of all events and is always ready '
+                       'to help out with a laugh or two. He’s the life of the '
+                       'party and the go-to guy for all your needs.'},
+ 'III': {'query': 'Who is III? . Give a funny answer 30 words long.',
+         'result': " I'm not sure who III is, but here's a funny answer: III "
+                   "must be a giant, because they're two miles high - that's "
+                   'one mile higher than Mount Everest! They must have some '
+                   'serious altitude sickness.'},
+ 'Jack-in-the-box': {'query': 'Who is Jack-in-the-box? . Give a funny answer '
+                              '30 words long.',
+                     'result': ' Jack-in-the-box is a mischievous little '
+                               'creature who loves to play pranks on '
+                               'unsuspecting people. He loves to hide in '
+                               'unexpected places and jump out when people '
+                               'least expect it, making them jump out of their '
+                               "skin! He's also known for his love of popping "
+                               'out of boxes to surprise people!'},
+ 'Judge': {'query': 'Who is Judge? . Give a funny answer 30 words long.',
+           'result': ' The King of Hearts is the judge, wearing his crown over '
+                     "his great wig. He's the one who reads out the "
+                     'accusations and cross-examines the witnesses, and even '
+                     'sentences the defendant before hearing the verdict. He '
+                     'appears to be a strict and fair judge, but at the same '
+                     'time has a bit of a silly side, as evidenced by his '
+                     'willingness to sentence the defendant before knowing the '
+                     'verdict.'},
+ 'King': {'query': 'Who is King? . Give a funny answer 30 words long.',
+          'result': " The King in Alice's Adventures in Wonderland is a rather "
+                    'silly monarch who grows increasingly frustrated and angry '
+                    "as Alice's trial progresses. He seems to be a bit "
+                    'forgetful, as he often needs to refer to his note-book to '
+                    'remind himself of the rules. He also appears to lack '
+                    "common sense, as he orders Alice's execution without a "
+                    "second thought. All in all, he's a comical character who "
+                    'is definitely not fit to be a king!'},
+ 'King and Queen of Hearts.': {'query': 'Who is King and Queen of Hearts.? . '
+                                        'Give a funny answer 30 words long.',
+                               'result': ' The King and Queen of Hearts were a '
+                                         'silly pair. They were always arguing '
+                                         'and making a fuss over the tiniest '
+                                         'matters. They were also known for '
+                                         'their poor judgement, like when they '
+                                         "tried to cut off Alice's head for "
+                                         'answering a question. In the end, '
+                                         'these two rulers of Wonderland were '
+                                         'nothing more than a pack of cards.'},
+ 'King of Hearts': {'query': 'Who is King of Hearts? . Give a funny answer 30 '
+                             'words long.',
+                    'result': ' The King of Hearts is the ruler of Wonderland. '
+                              'He is a very wise and just leader, but he often '
+                              'gets confused and has trouble keeping up with '
+                              'the madness of his kingdom. He also has a '
+                              'fondness for tarts, so much that he sometimes '
+                              'accuses innocent people of stealing them!'},
+ 'Knave': {'query': 'Who is Knave? . Give a funny answer 30 words long.',
+           'result': ' The Knave of Hearts is a mysterious figure who is '
+                     "accused of stealing the Queen of Heart's tarts. He is a "
+                     'bit of a prankster, as evidenced by the fact that he '
+                     'seems to have written a set of verses instead of signing '
+                     "his name to the crime. He's also a bit sneaky and sly, "
+                     'as he was able to elude capture for so long!'},
+ 'Knave of Hearts': {'query': 'Who is Knave of Hearts? . Give a funny answer '
+                              '30 words long.',
+                     'result': ' The Knave of Hearts is the notorious thief '
+                               "who stole the tarts. He's sly, sneaky, and "
+                               "always on the run! He's managed to elude "
+                               'capture for years, but now he stands trial in '
+                               'the court of the King and Queen of Hearts. '
+                               'Will justice prevail or will he get away with '
+                               'the crime of the century? Only time will '
+                               'tell!'},
+ 'Long Tale': {'query': 'Who is Long Tale? . Give a funny answer 30 words '
+                        'long.',
+               'result': ' Long Tale is a very chatty mouse who loves to tell '
+                         "stories that go on for days. He's always telling "
+                         'tales that are way too long and full of irrelevant '
+                         "details. He's the master of the long, winding story, "
+                         'and he loves to hear himself talk!'},
+ 'Lory': {'query': 'Who is Lory? . Give a funny answer 30 words long.',
+          'result': " Lory is an Eaglet who's always grumpy and complaining. "
+                    'Whenever anyone speaks, he\'s always saying "Ugh!" and '
+                    "rolling his eyes. He's always trying to find something to "
+                    'be unhappy about and is the grumpiest bird in the whole '
+                    'party!'},
+ 'March Hare': {'query': 'Who is March Hare? . Give a funny answer 30 words '
+                         'long.',
+                'result': ' The March Hare is an eccentric character who '
+                          'enjoys asking riddles and is often seen having tea '
+                          "with the Mad Hatter and the Dormouse. He's so mad "
+                          'he bit his teacup instead of bread and butter at '
+                          'the trial of the Knave of Hearts!'},
+ 'Mary Ann': {'query': 'Who is Mary Ann? . Give a funny answer 30 words long.',
+              'result': " Mary Ann is Alice's imaginary housemaid. She is "
+                        'always running around the house doing chores for '
+                        "Alice, even though Alice doesn't pay her. Whenever "
+                        'Alice needs something done, she just shouts "Mary '
+                        'Ann!" and Mary Ann appears to help her out. She is a '
+                        'very hardworking, loyal, and efficient housemaid, '
+                        "although Alice sometimes forgets she's not real."},
+ 'Morcar': {'query': 'Who is Morcar? . Give a funny answer 30 words long.',
+            'result': ' Morcar is a large, friendly caterpillar who loves to '
+                      "give advice to anyone who needs it. He's always seen "
+                      'with a hookah in hand, and often wears a pointed hat '
+                      'and a long, flowing cape. His favorite saying is "Keep '
+                      'your temper!" and he often enjoys having long '
+                      'conversations about philosophy and life with his '
+                      'friends.'},
+ 'Mouse': {'query': 'Who is Mouse? . Give a funny answer 30 words long.',
+           'result': ' Mouse is an adventurous mouse from France. It traveled '
+                     'with William the Conqueror and has been on many wild '
+                     "journeys. It's a brave mouse and loves to explore new "
+                     "places and meet new people. It's especially fond of cats "
+                     'and dogs, and often tries to show Alice its best friend '
+                     "Dinah. It's always ready for a new adventure and even "
+                     'knows how to speak English!'},
+ 'None': {'query': 'Who is None? . Give a funny answer 30 words long.',
+          'result': " None is Alice's older sister who loves to cause trouble. "
+                    "She always finds a way to make Alice's day more "
+                    'complicated with her pranks and jokes. She has a tendency '
+                    'to disappear when things get too heated, leaving Alice to '
+                    'pick up the pieces.'},
+ 'Pat': {'query': 'Who is Pat? . Give a funny answer 30 words long.',
+         'result': ' Pat is the mysterious voice Alice hears outside the '
+                   'house. Pat is a magical creature, like a Leprechaun, who '
+                   "loves to dig for apples and make mischief. Pat's "
+                   'mischievous spirit is always getting him into trouble, but '
+                   'luckily Alice is able to save him in the end!'},
+ 'Pepper': {'query': 'Who is Pepper? . Give a funny answer 30 words long.',
+            'result': " Pepper is the Duchess's cook who carries the "
+                      'pepper-box in her hand. Whenever she enters the room, '
+                      'everyone starts sneezing. Pepper is famous for making '
+                      'soup that is too spicy and for making everyone around '
+                      'her sneeze due to her pepper-box!'},
+ 'Pig': {'query': 'Who is Pig? . Give a funny answer 30 words long.',
+         'result': ' Pig is an imaginary creature that the Caterpillar made up '
+                   "to describe Alice's state of confusion. He is a footman "
+                   'with a face like a fish and a body like a cut of bacon. He '
+                   'is always running around, making sure everyone has their '
+                   "comfits and that the race is over. He's always getting "
+                   'mixed up and is a bit of a porky muddle!'},
+ 'Pigeon': {'query': 'Who is Pigeon? . Give a funny answer 30 words long.',
+            'result': ' The Pigeon is a small, grumpy bird who is always '
+                      'looking out for danger. He is constantly complaining '
+                      'about the serpents in the sky and is always on the '
+                      'lookout for eggs. He is definitely not the most '
+                      'pleasant creature to be around, as he is always in a '
+                      'sour mood.'},
+ 'Professor Michael S. Hart': {'query': 'Who is Professor Michael S. Hart? . '
+                                        'Give a funny answer 30 words long.',
+                               'result': ' Professor Michael S. Hart was a '
+                                         'very wise and eccentric Dodo who, '
+                                         'instead of running races, decided to '
+                                         'start the Project Gutenberg™ concept '
+                                         'of a library of electronic works '
+                                         'that could be freely shared with '
+                                         'anyone. He was a brilliant idea man '
+                                         "who didn't just talk about a better "
+                                         'world, but actually made it happen. '
+                                         'He was the original mad hatter who, '
+                                         'instead of giving out prizes of '
+                                         'comfits, handed out prizes of '
+                                         'knowledge. He was the original '
+                                         'cheshire cat, disappearing into the '
+                                         'ether after a life of mischief and '
+                                         'adventure.'},
+ 'Queen': {'query': 'Who is Queen? . Give a funny answer 30 words long.',
+           'result': ' The Queen of Hearts is a powerful monarch who rules '
+                     "over the realm of Wonderland. She's a fearsome ruler who "
+                     'commands her loyal subjects to follow her orders without '
+                     'question, and she\'s not afraid to shout "Off with their '
+                     'heads!" if things don\'t go her way. She is also a '
+                     'passionate card player and loves playing croquet with '
+                     "her subjects, but she's not afraid to cheat if it gets "
+                     'her a win!'},
+ 'Queen of Hearts': {'query': 'Who is Queen of Hearts? . Give a funny answer '
+                              '30 words long.',
+                     'result': ' The Queen of Hearts is a powerful and '
+                               'temperamental monarch, who loves to shout "Off '
+                               'with their heads!" and play croquet with '
+                               "hedgehogs and flamingos. She's definitely "
+                               "someone you don't want to cross!"},
+ 'Queen.': {'query': 'Who is Queen.? . Give a funny answer 30 words long.',
+            'result': " The Queen of Hearts, of course! She's a fierce ruler "
+                      'who loves to shout "Off with his head!" She is a pack '
+                      "of cards come to life, and she's always ready to play a "
+                      'game of croquet. Be careful not to cross her, or you '
+                      'may find yourself in the middle of her royal '
+                      'execution.'},
+ 'Rabbit': {'query': 'Who is Rabbit? . Give a funny answer 30 words long.',
+            'result': ' Rabbit is a very confused character. He is constantly '
+                      'losing things and asking for help. He even mistakes '
+                      'Alice for his housemaid! He is always in a hurry and '
+                      'never seems to get things done. Despite all of this, he '
+                      'is a very lovable character and always manages to find '
+                      'a solution to his problems.'},
+ 'Royal Children': {'query': 'Who is Royal Children? . Give a funny answer 30 '
+                             'words long.',
+                    'result': ' The Royal Children are a group of ten kids who '
+                              'are decorated with hearts. They are the most '
+                              'fashionable kids around and always show up in '
+                              'the latest jewelry and accessories. They are '
+                              'the trendsetters that everyone looks to for the '
+                              'latest styles.'},
+ 'Seven': {'query': 'Who is Seven? . Give a funny answer 30 words long.',
+           'result': ' Seven is an imaginary creature made up of seven cats '
+                     'and seven dogs, all wearing seven hats! It roams the '
+                     'world, looking for adventure and enjoys long naps in the '
+                     'sun.'},
+ 'Stigand': {'query': 'Who is Stigand? . Give a funny answer 30 words long.',
+             'result': ' Stigand is a patriotic archbishop of Canterbury who '
+                       'is often found in the form of a frog or a worm. He is '
+                       'often found trying to offer William the crown or '
+                       'searching for energetic remedies to get Alice dry '
+                       'again.'},
+ 'Ten Courtiers': {'query': 'Who is Ten Courtiers? . Give a funny answer 30 '
+                            'words long.',
+                   'result': ' Ten Courtiers are ten people who love to play '
+                             'croquet with the Queen, and are always dressed '
+                             'to the nines with diamonds and other extravagant '
+                             "items. They can usually be found in the Queen's "
+                             'court, showing off their fancy clothes and '
+                             'croquet skills.'},
+ 'Ten Soldiers': {'query': 'Who is Ten Soldiers? . Give a funny answer 30 '
+                           'words long.',
+                  'result': ' Ten Soldiers is a group of ten soldiers carrying '
+                            'clubs, with their hands and feet at the corners. '
+                            'They are the first to march in the grand '
+                            'procession of the Queen of Hearts, and are '
+                            'followed by ten courtiers, all covered in '
+                            'diamonds, and the royal children, all covered in '
+                            'hearts. They are quite an intimidating sight, and '
+                            "it's no wonder Alice felt a little timid when she "
+                            'saw them.'},
+ 'The Cheshire Cat': {'query': 'Who is The Cheshire Cat? . Give a funny answer '
+                               '30 words long.',
+                      'result': ' The Cheshire Cat is a mysterious and '
+                                'mischievous character who loves to grin and '
+                                'cause trouble! He is known for his wise '
+                                'words, mysterious ways, and often causes '
+                                'chaos with his unpredictable behavior!'},
+ 'The Duchess': {'query': 'Who is The Duchess? . Give a funny answer 30 words '
+                          'long.',
+                 'result': ' The Duchess is a mysterious figure that seems to '
+                           'appear and disappear at will. She often shows up '
+                           'just when Alice needs her most, offering advice '
+                           'and affectionate arm tucks. She is so elusive that '
+                           'some people have taken to calling her the Cheshire '
+                           'Duchess, since she seems to vanish like a Cheshire '
+                           'Cat!'},
+ 'The Mad Hatter': {'query': 'Who is The Mad Hatter? . Give a funny answer 30 '
+                             'words long.',
+                    'result': ' The Mad Hatter is a mysterious character who '
+                              "loves to ask riddles that don't have answers. "
+                              'He also enjoys drinking tea, eating bread and '
+                              'butter, and playing croquet with the Queen. '
+                              "He's a bit of a troublemaker, but his heart is "
+                              'in the right place - he just wants to have a '
+                              'good time!'},
+ 'The March Hare': {'query': 'Who is The March Hare? . Give a funny answer 30 '
+                             'words long.',
+                    'result': " The March Hare is a Mad Hatter's tea party "
+                              'companion who is always ready to help Alice '
+                              'with riddles and tea, although the answers he '
+                              'gives are often as confusing as the questions. '
+                              'He is a bit of a comic relief, and is often '
+                              'seen arm in arm with the dozing Dormouse.'},
+ 'The Queen of Hearts.': {'query': 'Who is The Queen of Hearts.? . Give a '
+                                   'funny answer 30 words long.',
+                          'result': ' The Queen of Hearts is a powerful woman '
+                                    'who loves to play croquet and shout "Off '
+                                    'with his head!" She is also known for '
+                                    'making delicious tarts and expecting '
+                                    'everyone to obey her orders without '
+                                    'question.'},
+ 'The White Rabbit': {'query': 'Who is The White Rabbit? . Give a funny answer '
+                               '30 words long.',
+                      'result': ' The White Rabbit is a very important figure, '
+                                'as he is always late and always in a hurry! '
+                                'He is always running around the kingdom '
+                                'delivering important messages and trying to '
+                                'stay on schedule. He has a lot of '
+                                'responsibility and is one of the busiest '
+                                'creatures in Wonderland!'},
+ 'Twelve Creatures': {'query': 'Who is Twelve Creatures? . Give a funny answer '
+                               '30 words long.',
+                      'result': ' Twelve Creatures is a band of cats and dogs '
+                                'that were rescued from a pool on the shore. '
+                                "They've come together to form a band and make "
+                                'music with their sneezing, howling, and '
+                                'occasional peacock call. They rock the stage '
+                                'with their unique sound and show everyone why '
+                                'cats and dogs can be friends.'},
+ 'Two': {'query': 'Who is Two? . Give a funny answer 30 words long.',
+         'result': " Two is an imaginary friend of Alice's who she invents to "
+                   "help her when she's feeling overwhelmed. He's an "
+                   'adventurous little guy who loves to explore and is always '
+                   'on the lookout for new ideas and exciting things to try. '
+                   "He's always there to lend a helping hand - or a friendly "
+                   'hug - when Alice needs it.'},
+ 'U.S.': {'query': 'Who is U.S.? . Give a funny answer 30 words long.',
+          'result': ' U.S. stands for "Unusual Sizes"; Alice had changed sizes '
+                    "so many times throughout the day that she didn't know who "
+                    'she was anymore! She was a tall Alice, a small Alice, a '
+                    'wide Alice, a narrow Alice—it was all quite confusing! '},
+ 'W. Rabbit': {'query': 'Who is W. Rabbit? . Give a funny answer 30 words '
+                        'long.',
+               'result': ' W. Rabbit is a mysterious figure who is always '
+                         'looking for something he had lost - like his gloves '
+                         'and fan - and seems to forget he has a housemaid '
+                         "called Mary Ann. He's a bit forgetful and always "
+                         'getting into a muddle - like the time he bit a large '
+                         'piece out of his teacup instead of the bread and '
+                         "butter. He's always busy, hopping around looking for "
+                         'things and sending other people on errands - like '
+                         'the time he sent Alice off to fetch him a pair of '
+                         'gloves and a fan.'},
+ 'White Rabbit': {'query': 'Who is White Rabbit? . Give a funny answer 30 '
+                           'words long.',
+                  'result': ' White Rabbit is a curious little creature who '
+                            'loves to watch Alice as she falls down the rabbit '
+                            'hole. He loves to carry a watch, and is always in '
+                            "a hurry - even when there's no real rush! He's "
+                            'also quite forgetful - constantly dropping things '
+                            "and having to search for them. He's definitely an "
+                            'interesting character!'},
+ 'William the Conqueror': {'query': 'Who is William the Conqueror? . Give a '
+                                    'funny answer 30 words long.',
+                           'result': ' William the Conqueror was a legendary '
+                                     'figure who was said to have conquered '
+                                     'England and brought about the age of the '
+                                     'teacup. He was said to have been a '
+                                     'master of the art of bread and butter '
+                                     'diplomacy and was known for his wise use '
+                                     'of pepper-box diplomacy. He was also '
+                                     'said to have enjoyed a good game of '
+                                     'croquet.'},
+ 'animals': {'query': 'Who is animals? . Give a funny answer 30 words long.',
+             'result': ' Animals are a diverse group of creatures that often '
+                       'surprise us. From the silly and goofy to the '
+                       'mysterious and majestic, animals never cease to amaze '
+                       'us with their unique behaviors and personalities. They '
+                       'often make us laugh with their antics and keep us '
+                       'guessing with their strange ways!'},
+ 'animals.': {'query': 'Who is animals.? . Give a funny answer 30 words long.',
+              'result': ' The animals in this story are quite a motley crew! '
+                        "There's the Mouse, a Duck, a Dodo, a Lory, an Eaglet, "
+                        'and various other curious creatures. They all have '
+                        "their own personalities, from the Mouse's passionate "
+                        "hatred of cats and dogs to the Dodo's long-winded "
+                        "speeches. It's a real zoo in this story!"},
+ 'archbishop of Canterbury': {'query': 'Who is archbishop of Canterbury? . '
+                                       'Give a funny answer 30 words long.',
+                              'result': ' The archbishop of Canterbury is the '
+                                        "Cheshire Cat! He's always seen "
+                                        "grinning from ear to ear, and he's "
+                                        'always ready to offer a bit of '
+                                        'wisdom. He may not have the official '
+                                        'title, but he certainly has the '
+                                        'qualities of an archbishop!'},
+ 'birds': {'query': 'Who is birds? . Give a funny answer 30 words long.',
+           'result': ' The birds were the athletes of the race, eager to '
+                     "compete and win the prize of Alice's comfits. They flew "
+                     'around the race-course, flapping their wings and '
+                     'chirping in excitement, but when the race was over they '
+                     'were all left feeling a bit disappointed.'},
+ 'pigeon': {'query': 'Who is pigeon? . Give a funny answer 30 words long.',
+            'result': ' The Pigeon is an anxious bird who is constantly on the '
+                      'lookout for serpents. It takes its job of protecting '
+                      'its eggs very seriously, to the point of paranoia, and '
+                      'is so scared of the serpents that it shrieks every time '
+                      "it sees one. The Pigeon's fear of serpents is so strong "
+                      'that it even mistakes Alice - a little girl - for one!'},
+ 'pope': {'query': 'Who is pope? . Give a funny answer 30 words long.',
+          'result': ' The pope is a very powerful figure in the Catholic '
+                    'Church, but he also has a silly side! He loves to wear '
+                    'his signature outfit of bright white robes and a big, '
+                    "floppy hat, and he's not afraid to show off his moves on "
+                    "the dancefloor. He's often seen boogying down with all "
+                    'the other cardinals, and his enthusiasm is infectious!'}}
