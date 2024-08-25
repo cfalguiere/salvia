@@ -1,0 +1,9 @@
+{
+    "model_id": "bigscience/bloom-1b7",
+    "model_kwargs": {
+        "temperature": 0,
+        "max_length": 256
+    },
+    "pipeline_kwargs": {},
+    "_type": "huggingface_pipeline"
+}
